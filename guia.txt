@@ -1,0 +1,6 @@
+crear un entorno virtual 
+(virtualenv -p python3) nombre --> env
+freamewok flask
+pip instal flask
+Mysql conexion
+pip install flask_MySq, pip install flask-mysqldb

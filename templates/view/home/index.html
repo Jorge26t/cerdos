@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CONTROL DE PRODUCCIÓN</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{{url_for('static', filename='Admin/plugins/fontawesome-free/css/all.min.css')}}" />
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
+  <!-- Tempusdominus Bootstrap 4 -->
+  <link rel="stylesheet"
+    href="{{url_for('static', filename='Admin/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}" />
+  <!-- iCheck -->
+  <link rel="stylesheet"
+    href="{{url_for('static', filename='Admin/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}" />
+  <!-- JQVMap -->
+  <link rel="stylesheet" href="{{url_for('static', filename='Admin/plugins/jqvmap/jqvmap.min.css')}}" />
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{{url_for('static', filename='Admin/dist/css/adminlte.min.css')}}" />
+  <!-- overlayScrollbars -->
+  <link rel="stylesheet"
+    href="{{url_for('static', filename='Admin/plugins/overlayScrollbars/css/OverlayScrollbars.min.css')}}" />
+  <!-- Daterange picker -->
+  <link rel="stylesheet" href="{{url_for('static', filename='Admin/plugins/daterangepicker/daterangepicker.css')}}" />
+  <!-- summernote -->
+  <link rel="stylesheet" href="{{url_for('static', filename='Admin/plugins/summernote/summernote-bs4.min.css')}}" />
+
+  <link rel="stylesheet" href="{{url_for('static', filename='plugins/DATATABLES/datatables.min.css')}}" />
+</head>
+
+<style>
+  .azuldete {
+    color: #fff !important;
+    background: #17a2b8 !important;
+    border-color: #17a2b8 !important;
+  }
+
+  .redfule {
+    color: #fff !important;
+    background: #dc3545 !important;
+    border-color: #dc3545 !important;
+  }
+
+  .greenlover {
+    color: #fff !important;
+    background: #28a745 !important;
+    border-color: #28a745 !important;
+  }
+
+  .moverabajo {
+    padding-top: 22px;
+  }
+</style>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+  <div class="wrapper">
+    <!-- Preloader -->
+    <div class="preloader flex-column justify-content-center align-items-center">
+      <img class="animation__shake" src="{{url_for('static', filename='Admin/dist/img/AdminLTELogo.png')}}"
+        alt="AdminLTELogo" height="60" width="60" />
+    </div>
+
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+      <!-- Left navbar links -->
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+      </ul>
+
+      <ul class="navbar-nav ml-auto">
+
+        <li class="nav-item">
+          <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+            <i class="fas fa-expand-arrows-alt"></i>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="btn btn-outline-info">
+            <i class="fa fa-calendar"></i> {{now}}
+          </a>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link" data-toggle="dropdown" href="#">
+            <i>
+              <img class="img-circle elevation-2" height="35" width="35" id="img_l_2" />
+            </i>
+            <span><i class="fa fa-caret-down"></i></span>
+          </a>
+
+          <div class="dropdown-menu dropdown dropdown-menu-right">
+            <a style="cursor: pointer;" class="dropdown-item" onclick="mostar_perfil();">
+              <i class="fas fa-user" style="color: rgb(119, 119, 218);"></i> Perfi
+            </a>
+            <div class="dropdown-divider"></div>
+            <a style="cursor: pointer;" class="dropdown-item" onclick="modtar_password_l();">
+              <i class="fas fa-key" style="color: rgb(171, 233, 0);"></i> Cambiar password
+            </a>
+            <div class="dropdown-divider"></div>
+            <a style="cursor: pointer;" class="dropdown-item" onclick="mostar_foto_l();">
+              <i class="fas fa-image" style="color: rgb(241, 117, 14);"></i> Cambiar foto
+            </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="btn btn-danger nav-link" style="color: white" onclick="cerar_sesion();" role="button">
+            <i class="fa fa-power-off"></i> Cerrar
+          </a>
+        </li>
+
+        <script type="text/javascript">
+          function cerar_sesion() {
+            var mensaje = confirm("¿Desea cerrar sesión?");
+            if (mensaje) {
+              window.location.href = "/cerrar_sesion";
+            }
+          }
+        </script>
+      </ul>
+    </nav>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <!-- Sidebar user panel (optional) -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+          <div class="image">
+            <img width="100px" id="imagen_l_1" class="img-circle elevation-2" alt="User Image" />
+          </div>
+          <div class="info" style="color: white;">
+            <a href="/" class="d-block"><span style="font-size: 17px;" id="nombres_l_l"></span></a>
+            <span class="bg bg-info" style="border-radius: 20px; margin: 1px; font-size: 12px;" id="rol_l"></span>
+          </div>
+        </div>
+
+
+        <nav class="mt-2">
+          <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-users"></i>
+                <p>
+                  Usuarios
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a onclick="cargar_contenido('contenido_principal','/listar_rol');" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Rol de usuario</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a onclick="cargar_contenido('contenido_principal','/create_user');" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Registro de usuario</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a onclick="cargar_contenido('contenido_principal','/lista_usuario');" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Listado de usuarios</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a onclick="cargar_contenido('contenido_principal','/hacienda');" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Hacienda</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+
+          </ul>
+        </nav>
+
+      </div>
+
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" id="contenido_principal">
+      <!-- Content Header (Page header) -->
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0">Tablero</h1>
+            </div>
+            <!-- /.col -->
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="#">Inicio</a></li>
+                <li class="breadcrumb-item active">Tablero</li>
+              </ol>
+            </div>
+            <!-- /.col -->
+          </div>
+          <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+      </div>
+      <!-- /.content-header -->
+
+      <!-- Main content -->
+      <section class="content">
+        <div class="container-fluid">
+          <!-- Small boxes (Stat box) -->
+          <div class="row">
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-info">
+                <div class="inner">
+                  <h3>150</h3>
+
+                  <p>Compras</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-bag"></i>
+                </div>
+                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-success">
+                <div class="inner">
+                  <h3>53<sup style="font-size: 20px">%</sup></h3>
+
+                  <p>Engorde</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-warning">
+                <div class="inner">
+                  <h3>44</h3>
+
+                  <p>Clientes</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-person-add"></i>
+                </div>
+                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-danger">
+                <div class="inner">
+                  <h3>65</h3>
+
+                  <p>Crias</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-pie-graph"></i>
+                </div>
+                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+          </div>
+          <!-- /.row -->
+          <!-- Main row -->
+          <div class="row"></div>
+          <!-- /.row (main row) -->
+        </div>
+        <!-- /.container-fluid -->
+      </section>
+      <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <footer class="main-footer">
+      <strong>Copyright &copy; 2022 <a>Hacienda "Amada Angélica"</a>.</strong>
+    </footer>
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+      <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+  </div>
+  <!-- ./wrapper -->
+
+  <!-- jQuery -->
+  <script src="{{url_for('static', filename='Admin/plugins/jquery/jquery.min.js')}}"></script>
+  <!-- jQuery UI 1.11.4 -->
+  <script src="{{url_for('static', filename='Admin/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
+  <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+  <script></script>
+  <!-- Bootstrap 4 -->
+  <script src="{{url_for('static', filename='Admin/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+  <script src="{{url_for('static', filename='Admin/plugins/sparklines/sparkline.js')}}"></script>
+  <script src="{{url_for('static', filename='Admin/plugins/jqvmap/jquery.vmap.min.js')}}"></script>
+  <script src="{{url_for('static', filename='Admin/plugins/jqvmap/maps/jquery.vmap.usa.js')}}"></script>
+  <script src="{{url_for('static', filename='Admin/plugins/moment/moment.min.js')}}"></script>
+  <script src="{{url_for('static', filename='Admin/plugins/daterangepicker/daterangepicker.js')}}"></script>
+  <script
+    src="{{url_for('static', filename='Admin/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
+  <script src="{{url_for('static', filename='Admin/plugins/summernote/summernote-bs4.min.js')}}"></script>
+  <script
+    src="{{url_for('static', filename='Admin/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script>
+  <script src="{{url_for('static', filename='Admin/dist/js/adminlte.js')}}"></script>
+
+  <!-- mis scripts   -->
+  <script src="{{url_for('static', filename='plugins/js/sweetalert2/sweetalert2.all.min.js')}}"></script>
+  <script src="{{url_for('static', filename='plugins/DATATABLES/datatables.min.js')}}"></script>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+
+  <script src="{{url_for('static', filename='js/system.js')}}"></script>
+</body>
+
+</html>
+
+<div class="modal fade" id="modaleditar_usuario_logeado">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content bg-primary">
+      <div class="modal-header">
+        <h4 class="modal-title">Editar datos de perfil</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="background: white; color: black">
+
+        <div class="row">
+          <div class="form-group col-lg-6 col-6">
+            <label for="nombres_l">Nombres</label>
+            <input type="text" maxlength="60" class="form-control" id="nombres_l" placeholder="Ingrese nombres"
+              onkeypress="return soloLetras(event)" />
+            <span style="color: red" id="nombre_oblig_l"></span>
+          </div>
+
+          <div class="form-group col-lg-6 col-6">
+            <label for="apellidos_l">Apellidos</label>
+            <input type="text" maxlength="60" class="form-control" id="apellidos_l" placeholder="Ingrese apellidos"
+              onkeypress="return soloLetras(event)" />
+            <span style="color: red" id="apellidos_obligg_l"></span>
+          </div>
+
+          <div class="form-group col-lg-6 col-6">
+            <label for="domicilio_l">Domicilio</label>
+            <input type="text" maxlength="60" class="form-control" id="domicilio_l" placeholder="Ingrese domicilio" />
+            <span style="color: red" id="domicilio_obligg_l"></span>
+          </div>
+
+          <div class="form-group col-lg-6 col-6">
+            <label for="telefono_l">Telefono</label>
+            <input type="text" maxlength="10" class="form-control" id="telefono_l" placeholder="Ingrese telefono"
+              onkeypress="return soloNumeros(event)" />
+            <span style="color: red" id="telefono_obligg_l"></span>
+          </div>
+
+          <div class="form-group col-lg-6 col-6">
+            <label for="usuario_l">Usuario</label>
+            <input type="text" maxlength="35" class="form-control" id="usuario_l" placeholder="Ingrese usuario" />
+            <span style="color: red" id="usuario_obligg_l"></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between" style="background: #f5f4f3 !important">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          Cerrar
+        </button>
+        <button onclick="editar_usuario_loegado();" class="btn btn-success">
+          <i class="fa fa-edit"></i> Guardar
+        </button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="modal_editar_foto_logeado">
+  <div class="modal-dialog">
+    <div class="modal-content bg-warning">
+      <div class="modal-header">
+        <h4 class="modal-title">Editar foto</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="background: white; color: black">
+
+        <input type="text" id="foto_actu_l" hidden>
+
+        <div class="row">
+
+          <div class="col-md-12 mb-3 mx-auto text-center">
+            <label for="foto_new_l">Foto del usuario</label>
+
+            <img id="img_usuario_l" height="200" width="300" class="border rounded mx-auto d-block img-fluid" />
+
+            <input type="file" class="form-control" id="foto_new_l" />
+          </div>
+
+
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between" style="background: #f5f4f3 !important">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          Cerrar
+        </button>
+        <button onclick="editar_foto_usuario_logeado();" class="btn btn-success">
+          <i class="fa fa-edit"></i> Guardar
+        </button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="modaleditar_password_logeado">
+  <div class="modal-dialog">
+    <div class="modal-content bg-danger">
+      <div class="modal-header">
+        <h4 class="modal-title">Cambiar password</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="background: white; color: black">
+
+        <input type="text" id="pass_oculto" hidden>
+
+        <div class="row">
+          <div class="form-group col-lg-10 col-6">
+            <label for="password_ac">Password actual</label>
+            <input type="password" maxlength="60" class="form-control" id="password_ac"
+              placeholder="Ingrese password actual" />
+            <span style="color: red" id="password_ac_oblig"></span>
+          </div>
+
+          <div class="form-group col-lg-1 col-1">
+            <label>...</label>
+            <button class="btn btn-primary" onclick="ver_password_l();">
+              <i class="fa fa-eye"></i>
+            </button>
+          </div>
+
+          <div class="form-group col-lg-6 col-6">
+            <label for="password_n">Password nuevo</label> <b><span id="passstrength"></span></b>
+            <input type="password" maxlength="60" class="form-control" id="password_n"
+              placeholder="Ingrese password nuevo" />
+            <span style="color: red" id="password_n_oblig"></span>
+          </div>
+
+          <div class="form-group col-lg-6 col-6">
+            <label for="confirmar_p">Comfirmar password</label>
+            <input type="password" maxlength="60" class="form-control" id="confirmar_p"
+              placeholder="Confirme password" />
+            <span style="color: red" id="confirmar_p_obligg"></span>
+          </div>
+
+   
+
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between" style="background: #f5f4f3 !important">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          Cerrar
+        </button>
+        <button onclick="editar_password_l();" class="btn btn-success">
+          <i class="fa fa-edit"></i> Guardar
+        </button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+<script>
+  var pass_usus_l = false;
+
+  datos_usuarios_logeo();
+
+  function cargar_contenido(contenedor, contenido) {
+    $("#" + contenedor).load(contenido);
+  }
+
+  /////////////////
+  function soloLetras(e) {
+    key = e.keyCode || e.which;
+    tecla = String.fromCharCode(key).toLowerCase();
+    letras = " áéíóúabcdefghijklmnñopqrstuvwxyz";
+    especiales = "8-37-39-46";
+    tecla_especial = false;
+    for (var i in especiales) {
+      if (key == especiales[i]) {
+        tecla_especial = true;
+        break;
+      }
+    }
+    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
+      return swal.fire(
+        "No se permiten numeros!!",
+        "Solo se permiten letras",
+        "warning"
+      );
+    }
+  }
+
+  function soloNumeros(e) {
+    var key = window.event ? e.which : e.keyCode;
+    if (key < 48 || key > 57) {
+      return swal.fire(
+        "No se permiten letras!!",
+        "Solo se permiten numeros",
+        "warning"
+      );
+    }
+  }
+
+  document.getElementById("foto_new_l").addEventListener("change", () => {
+    var filename = document.getElementById("foto_new_l").value;
+    var idxdot = filename.lastIndexOf(".") + 1;
+    var extfile = filename.substr(idxdot, filename.length).toLowerCase();
+    if (extfile == "jpg" || extfile == "jpeg" || extfile == "png") { } else {
+      swal.fire(
+        "Mensaje de alerta",
+        "Solo se aceptan imagenes - USTED SUBIO UN ARCHIVO CON LA EXTENCIO ." + extfile,
+        "warning"
+      );
+      document.getElementById("foto_new_l").value = "";
+    }
+  });
+
+  function ver_password_l() {
+    var ver = document.getElementById("password_ac");
+    var con = document.getElementById("password_n");
+    var re = document.getElementById("confirmar_p");
+
+    if (ver.type == "password") {
+      ver.type = "text";
+      con.type = "text";
+      re.type = "text";
+    } else {
+      ver.type = "password";
+      con.type = "password";
+      re.type = "password";
+    }
+  }
+
+  $("#password_n").keyup(function (e) {
+    var strongRegex = new RegExp(
+      "^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\\W).*$",
+      "g"
+    );
+    var mediumRegex = new RegExp(
+      "^(?=.{7,})(((?=.*[A-Z])(?=.*[a-z]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[0-9]))).*$",
+      "g"
+    );
+    var enoughRegex = new RegExp("(?=.{6,}).*", "g");
+    if (false == enoughRegex.test($(this).val())) {
+      $("#passstrength").html("Más caracteres.");
+      $("#passstrength").css("color", "red");
+
+      pass_usus_l = false;
+    } else if (strongRegex.test($(this).val())) {
+      $("#passstrength").className = "ok";
+      $("#passstrength").html("Fuerte!");
+      $("#passstrength").css("color", "green");
+
+      pass_usus_l = true;
+    } else if (mediumRegex.test($(this).val())) {
+      $("#passstrength").className = "alert";
+      $("#passstrength").html("Media!");
+      $("#passstrength").css("color", "orange");
+
+      pass_usus_l = false;
+    } else {
+      $("#passstrength").className = "error";
+      $("#passstrength").html("Débil!");
+      $("#passstrength").css("color", "red");
+
+      pass_usus_l = false;
+    }
+    return true;
+  });
+</script>
