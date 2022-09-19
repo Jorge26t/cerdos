@@ -3,6 +3,8 @@ from flask_mysqldb import MySQL
 
 from routers.index import index
 from routers.usuario import usuario
+from routers.cerdo import cerdo
+from routers.galpon import galpon
 
 app = Flask(__name__)
 app.secret_key = 'my_secret_key'
@@ -19,6 +21,8 @@ MySQL(app)
 # esto llama la vista carpeta routes archivo
 app.register_blueprint(index, url_prefix="/")
 app.register_blueprint(usuario, url_prefix="/usuario")
+app.register_blueprint(cerdo, url_prefix="/cerdo")
+app.register_blueprint(galpon, url_prefix="/galpon")
 
 #esta funcion ayuda controlar los errores cuanod no hay paginas
 def pagna_error(error):

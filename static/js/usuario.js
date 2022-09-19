@@ -69,7 +69,7 @@ $(document).on("click", "#btn_aceptar", function () {
               }).then((result) => {
                 /* Read more about handling dismissals below */
                 if (result.dismiss === Swal.DismissReason.timer) {
-                  location.reload();
+                  window.location.href = "/Admin";
                 }
               });
             }
@@ -88,7 +88,7 @@ function registra_rol() {
     $("#rol_obligg").html("Ingrese el nombre de rol");
     return Swal.fire("Campos vacios", "Ingrese el mombre del rol", "warning");
   } else {
-    $("#rol_obligg").html();
+    $("#rol_obligg").html("");
   }
 
   $.ajax({
@@ -359,7 +359,7 @@ function editar_rol() {
       if (response == 1) {
         $(".modal-body").LoadingOverlay("hide");
         $("#modal-primary").modal("hide");
-
+        tabla_rol.ajax.reload();
         return Swal.fire(
           "Editado con exito",
           "El rol se edito con exito",

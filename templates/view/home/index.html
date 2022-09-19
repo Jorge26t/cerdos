@@ -31,7 +31,9 @@
   <!-- summernote -->
   <link rel="stylesheet" href="{{url_for('static', filename='Admin/plugins/summernote/summernote-bs4.min.css')}}" />
 
+
   <link rel="stylesheet" href="{{url_for('static', filename='plugins/DATATABLES/datatables.min.css')}}" />
+  <link rel="stylesheet" href="{{url_for('static', filename='plugins/SELECT2/css/select2.min.css')}}" />
 </head>
 
 <style>
@@ -147,6 +149,7 @@
 
         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-users"></i>
@@ -174,10 +177,95 @@
                     <p>Listado de usuarios</p>
                   </a>
                 </li>
+              </ul>
+            </li>
+
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-wrench"></i>
+                <p>
+                  Configuraciones
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+    
                 <li class="nav-item">
                   <a onclick="cargar_contenido('contenido_principal','/hacienda');" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Hacienda</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a onclick="cargar_contenido('contenido_principal','/pag_web');" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Página web</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fa fa-paw"></i>
+                <p>
+                  Cerdos
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a onclick="cargar_contenido('contenido_principal','/razas');" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Razas</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a onclick="cargar_contenido('contenido_principal','/new_cerdo');" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Registro de cerdos</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a onclick="cargar_contenido('contenido_principal','/list_cerdo');" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Listado de cerdos</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fa fa-home"></i>
+                <p>
+                  Galpones
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a onclick="cargar_contenido('contenido_principal','/tipo_galpon');" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Tipo galpón</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a onclick="cargar_contenido('contenido_principal','/create_galpon');" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Nuevo galpón</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a onclick="cargar_contenido('contenido_principal','/list_galpon');" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Listado de galpones</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a onclick="cargar_contenido('contenido_principal','/list_galpon_cerdo');" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Galpón cerdos</p>
                   </a>
                 </li>
               </ul>
@@ -311,24 +399,24 @@
   <script></script>
   <!-- Bootstrap 4 -->
   <script src="{{url_for('static', filename='Admin/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-  <script src="{{url_for('static', filename='Admin/plugins/sparklines/sparkline.js')}}"></script>
+  <!-- <script src="{{url_for('static', filename='Admin/plugins/sparklines/sparkline.js')}}"></script>
   <script src="{{url_for('static', filename='Admin/plugins/jqvmap/jquery.vmap.min.js')}}"></script>
-  <script src="{{url_for('static', filename='Admin/plugins/jqvmap/maps/jquery.vmap.usa.js')}}"></script>
+  <script src="{{url_for('static', filename='Admin/plugins/jqvmap/maps/jquery.vmap.usa.js')}}"></script> -->
   <script src="{{url_for('static', filename='Admin/plugins/moment/moment.min.js')}}"></script>
   <script src="{{url_for('static', filename='Admin/plugins/daterangepicker/daterangepicker.js')}}"></script>
   <script
     src="{{url_for('static', filename='Admin/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
-  <script src="{{url_for('static', filename='Admin/plugins/summernote/summernote-bs4.min.js')}}"></script>
+  <!-- <script src="{{url_for('static', filename='Admin/plugins/summernote/summernote-bs4.min.js')}}"></script>
   <script
-    src="{{url_for('static', filename='Admin/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script>
+    src="{{url_for('static', filename='Admin/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script> -->
   <script src="{{url_for('static', filename='Admin/dist/js/adminlte.js')}}"></script>
 
   <!-- mis scripts   -->
   <script src="{{url_for('static', filename='plugins/js/sweetalert2/sweetalert2.all.min.js')}}"></script>
   <script src="{{url_for('static', filename='plugins/DATATABLES/datatables.min.js')}}"></script>
+  <script src="{{url_for('static', filename='plugins/SELECT2/js/select2.min.js')}}"></script>
 
-  <script
-    src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
 
   <script src="{{url_for('static', filename='js/system.js')}}"></script>
 </body>

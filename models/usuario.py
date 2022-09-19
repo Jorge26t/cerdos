@@ -57,6 +57,7 @@ class Usuario():
                 new_lista.append(dic)
             return {"data": new_lista}
         except Exception as e:
+            query.close()
             error = "Ocurrio un problema: " + str(e)
             return error
         return 0
@@ -104,6 +105,7 @@ class Usuario():
             query.close()
             return data
         except Exception as e:
+            query.close()
             error = "Ocurrio un problema: " + str(e)
             return error
         return 0
@@ -166,6 +168,7 @@ class Usuario():
                 new_lista.append(dic)
             return {"data": new_lista}
         except Exception as e:
+            query.close()
             error = "Ocurrio un problema: " + str(e)
             return error
         return 0

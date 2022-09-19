@@ -27,49 +27,29 @@
               <div class="row">
                 <div class="form-group col-lg-6 col-6">
                   <label for="nombres">Nombres</label>
-                  <input
-                    type="text"
-                    maxlength="60"
-                    class="form-control"
-                    id="nombres"
-                    placeholder="Ingrese nombres" onkeypress="return soloLetras(event)"
-                  />
+                  <input type="text" maxlength="60" class="form-control" id="nombres" placeholder="Ingrese nombres"
+                    onkeypress="return soloLetras(event)" />
                   <span style="color: red" id="nombre_oblig"></span>
                 </div>
 
                 <div class="form-group col-lg-6 col-6">
                   <label for="apellidos">Apellidos</label>
-                  <input
-                    type="text"
-                    maxlength="60"
-                    class="form-control"
-                    id="apellidos"
-                    placeholder="Ingrese apellidos" onkeypress="return soloLetras(event)"
-                  />
+                  <input type="text" maxlength="60" class="form-control" id="apellidos" placeholder="Ingrese apellidos"
+                    onkeypress="return soloLetras(event)" />
                   <span style="color: red" id="apellidos_obligg"></span>
                 </div>
 
                 <div class="form-group col-lg-6 col-6">
                   <label for="domicilio">Domicilio</label>
-                  <input
-                    type="text"
-                    maxlength="60"
-                    class="form-control"
-                    id="domicilio"
-                    placeholder="Ingrese domicilio"
-                  />
+                  <input type="text" maxlength="60" class="form-control" id="domicilio"
+                    placeholder="Ingrese domicilio" />
                   <span style="color: red" id="domicilio_obligg"></span>
                 </div>
 
                 <div class="form-group col-lg-6 col-6">
                   <label for="telefono">Telefono</label>
-                  <input
-                    type="text"
-                    maxlength="10"
-                    class="form-control"
-                    id="telefono"
-                    placeholder="Ingrese telefono" onkeypress="return soloNumeros(event)"
-                  />
+                  <input type="text" maxlength="10" class="form-control" id="telefono" placeholder="Ingrese telefono"
+                    onkeypress="return soloNumeros(event)" />
                   <span style="color: red" id="telefono_obligg"></span>
                 </div>
 
@@ -87,38 +67,22 @@
 
                 <div class="form-group col-lg-6 col-6">
                   <label for="usuario">Usuario</label>
-                  <input
-                    type="text"
-                    maxlength="35"
-                    class="form-control"
-                    id="usuario"
-                    placeholder="Ingrese usuario"
-                  />
+                  <input type="text" maxlength="35" class="form-control" id="usuario" placeholder="Ingrese usuario" />
                   <span style="color: red" id="usuario_obligg"></span>
                 </div>
 
                 <div class="form-group col-lg-6 col-6">
                   <label for="password">Password</label>
                   <b><span id="passstrength"></span></b>
-                  <input
-                    type="password"
-                    maxlength="35"
-                    class="form-control"
-                    id="password"
-                    placeholder="Ingrese password"
-                  />
+                  <input type="password" maxlength="35" class="form-control" id="password"
+                    placeholder="Ingrese password" />
                   <span style="color: red" id="password_obligg"></span>
                 </div>
 
                 <div class="form-group col-lg-5 col-5">
                   <label for="password_c">Confirmar password</label>
-                  <input
-                    type="password"
-                    maxlength="35"
-                    class="form-control"
-                    id="password_c"
-                    placeholder="Confirme password"
-                  />
+                  <input type="password" maxlength="35" class="form-control" id="password_c"
+                    placeholder="Confirme password" />
                   <span style="color: red" id="password_c_obligg"></span>
                 </div>
 
@@ -132,20 +96,10 @@
                 <div class="col-md-6 mb-3 mx-auto text-center">
                   <label for="password_c">Foto del usuario</label>
 
-                  <img
-                    id="img_producto"
-                    height="187"
-                    width="200"
-                    class="border rounded mx-auto d-block img-fluid"
-                    src="static/Admin/dist/img/user.png"
-                  />
+                  <img id="img_producto" height="187" width="200" class="border rounded mx-auto d-block img-fluid"
+                    src="static/Admin/dist/img/user.png" />
 
-                  <input
-                    type="file"
-                    class="form-control"
-                    id="foto"
-                    onchange="mostrar_imagen(this)"
-                  />
+                  <input type="file" class="form-control" id="foto" onchange="mostrar_imagen(this)" />
                 </div>
               </div>
             </div>
@@ -156,10 +110,7 @@
                 <i class="fa fa-save"></i> Guadar
               </button>
               -
-              <button
-                onclick="cargar_contenido('contenido_principal','/create_user');"
-                class="btn btn-danger"
-              >
+              <button onclick="cargar_contenido('contenido_principal','/create_user');" class="btn btn-danger">
                 <i class="fa fa-svae"></i> Limpiar
               </button>
             </div>
@@ -246,7 +197,7 @@
       swal.fire(
         "Mensaje de alerta",
         "Solo se aceptan imagenes - USTED SUBIO UN ARCHIVO CON LA EXTENCIO ." +
-          extfile,
+        extfile,
         "warning"
       );
       $("#img_producto")
