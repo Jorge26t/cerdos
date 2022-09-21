@@ -10,7 +10,7 @@
 
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+                    <li class="breadcrumb-item"><a href="/Admin">Inicio</a></li>
                     <li class="breadcrumb-item active">Lista de galpones cerdos</li>
                 </ol>
             </div>
@@ -32,45 +32,46 @@
 
                               {% for cerdo  in data %}
                               
-                            <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column">
-                                <div class="card bg-light d-flex flex-fill">
-                                  <div class="card-header text-muted border-bottom-0">
-                                    Galpón de cerdos
-                                  </div>
-                                  <div class="card-body pt-0">
-                                    <div class="row">
-                                      <div class="col-7">
-                                        <h2 class="lead"><b>Número galpón:</b></h2>
-                                        <p class="text-muted text-sm"><b>  {{cerdo[1]}} </b> </p>
-                                        <ul class="ml-4 mb-0 fa-ul text-muted"> 
+                              <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column">
+                                  <div class="card bg-light d-flex flex-fill">
+                                    <div class="card-header text-muted border-bottom-0">
+                                      Galpón de cerdos
+                                    </div>
+                                    <div class="card-body pt-0">
+                                      <div class="row">
+                                        <div class="col-7">
+                                          <h2 class="lead"><b>Número galpón:</b></h2>
+                                          <p class="text-muted text-sm"><b>  {{cerdo[1]}} </b> </p>
+                                          <ul class="ml-4 mb-0 fa-ul text-muted"> 
 
-                                          <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Capacidad: <b>{{cerdo[2]}}</b></li>
-                                          <li class="small"><span class="fa-li"><i class="fas fa-lg fa-paw"></i></span> Cantidad en galpón:  <b>{{cerdo[4]}}</b></li>
-                                          <li class="small"><span class="fa-li"><i class="fas fa-lg fa-eye"></i></span> Observación:  <b>{{cerdo[3]}}</b></li>
+                                            <li class="small"><span class="fa-li"><i class="fas fa-lg fa-bookmark"></i></span> Tipo: <b>{{cerdo[5]}}</b></li>
+                                            <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Capacidad: <b>{{cerdo[2]}}</b></li>
+                                            <li class="small"><span class="fa-li"><i class="fas fa-lg fa-paw"></i></span> Cerdos en galpón:  <b>{{cerdo[4]}}</b></li>
+                                            <li class="small"><span class="fa-li"><i class="fas fa-lg fa-eye"></i></span> Observación:  <b>{{cerdo[3]}}</b></li>
 
-                                        </ul>
-                                      </div>
-                                      <div class="col-5 text-center">
-                                        <img src="static/uploads/cerdo/cerdo.jpg" alt="user-avatar" class="img-circle img-fluid">
+                                          </ul>
+                                        </div>
+                                        <div class="col-5 text-center">
+                                          <img src="static/uploads/cerdo/cerdo.jpg" alt="user-avatar" class="img-circle img-fluid">
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
-                                  <div class="card-footer">
+                                    <div class="card-footer">
 
-                                    <div class="text-right">
+                                      <div class="text-right">
 
-                                      <a onclick="ver_cerdos({{cerdo[0]}});" class="btn btn-sm bg-warning">
-                                        <b> <i class="fas fa-eye"></i> Ver cerdos </b>
-                                      </a>
+                                        <a onclick="cargar_contenido('contenido_principal','/ver_cerdos_galpo/{{cerdo[0]}}');" class="btn btn-sm bg-warning">
+                                          <b> <i class="fas fa-eye"></i> Ver cerdos </b>
+                                        </a>
 
-                                      <a class="btn btn-sm btn-danger">
-                                        <b> <i class="fas fa-building"></i> Movimientos </b>
-                                      </a>
+                                        <a class="btn btn-sm btn-danger">
+                                          <b> <i class="fas fa-building"></i> Movimientos </b>
+                                        </a>
+                                      </div>
+
                                     </div>
-
                                   </div>
-                                </div>
-                            </div>
+                              </div>
                               
                               {% endfor %}
                                  

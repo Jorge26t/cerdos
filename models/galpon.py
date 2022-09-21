@@ -33,11 +33,11 @@ class Galpon():
                             galpon.observacion, 
                             COUNT(galpon_cerdo.id_cerdo) as cerdo,
                             tipo_galpon.tipo_galpon 
-                        FROM
+                            FROM
                             galpon
                             INNER JOIN galpon_cerdo ON galpon.id_galpon = galpon_cerdo.id_galpon
                             INNER JOIN tipo_galpon ON galpon.id_tipo = tipo_galpon.id_tipo 
-                        GROUP BY
+                            GROUP BY
                             galpon_cerdo.id_galpon""")
             data = query.fetchall()
             query.close()
@@ -47,6 +47,79 @@ class Galpon():
             error = "Ocurrio un problema: " + str(e)
             return error
         return 0
+
+    # modelo para listar los cerdos del galpon
+    def Listar_cerdos_galpon_tabla(id):
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                            galpon_cerdo.fecha,
+                            cerdo.codigo,
+                            cerdo.sexo,
+                            raza.raza,
+                            cerdo.foto,
+                            cerdo.peso,
+                            cerdo.origen,
+                            galpon_cerdo.id_galpon_cerdo,
+                            galpon_cerdo.id_galpon,
+                            galpon_cerdo.id_cerdo 
+                        FROM
+                            galpon_cerdo
+                            INNER JOIN cerdo ON galpon_cerdo.id_cerdo = cerdo.id_cerdo
+                            INNER JOIN raza ON cerdo.raza = raza.id_raza WHERE galpon_cerdo.id_galpon = '{0}'""".format(id))
+            data = query.fetchall()
+            query.close()
+            return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+ 
+    # modelo para listar los cerdos del galpon
+    def Listar_cerdos_galpon(id):
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                            galpon_cerdo.fecha,
+                            cerdo.codigo,
+                            cerdo.sexo,
+                            raza.raza,
+                            cerdo.foto,
+                            cerdo.peso,
+                            cerdo.origen,
+                            galpon_cerdo.id_galpon_cerdo,
+                            galpon_cerdo.id_galpon,
+                            galpon_cerdo.id_cerdo 
+                        FROM
+                            galpon_cerdo
+                            INNER JOIN cerdo ON galpon_cerdo.id_cerdo = cerdo.id_cerdo
+                            INNER JOIN raza ON cerdo.raza = raza.id_raza WHERE galpon_cerdo.id_galpon = '{0}'""".format(id))
+            data = query.fetchall()
+            query.close()
+            new_lista = []
+            for datos in data:
+                dic = {}
+                Convert = datetime.strptime(str(datos[0]), '%Y-%m-%d')
+                dic["fecha"] = Convert.strftime('%Y-%m-%d')
+                dic["codigo"] = datos[1]
+                dic["sexo"] = datos[2]
+                dic["raza"] = datos[3]
+                dic["foto"] = datos[4]
+                dic["peso"] = datos[5]
+                dic["origen"] = datos[6]
+                dic["id_galpon_cerdo"] = datos[7] 
+                dic["id_galpon"] = datos[8]
+                dic["id_cerdo"] = datos[9]           
+                new_lista.append(dic)
+            return {"data": new_lista}
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+ 
+    ########################################
 
     # modelo de listar tipo de galpon
     def Listar_tipo_galpon():
@@ -295,5 +368,81 @@ class Galpon():
             return error
         return 0
 
-    
+    # modelo para pasar el cerdo a otro galpon
+    def Editar_cerdo_galpon(_id_a, _id_n, id_c, fecha, id_f, _text):
+        try:
+            query = mysql.connection.cursor() 
+            query.execute('UPDATE galpon_cerdo SET fecha="{0}", id_galpon="{1}" WHERE id_galpon="{2}" AND id_cerdo="{3}"'.format(fecha, _id_n, _id_a, id_c))
+            query.connection.commit()      
+
+            query.execute('INSERT INTO movimientos (id_g_c, fecha, hasta) VALUES ("{0}","{1}","{2}")'.format(id_f, fecha, _text))
+            query.connection.commit()      
+
+            query.close()
+            return 1
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+
+    # modelo para movimientos de cerdos de galpones
+    def Movimientos_cerdo():
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                            movimientos.fecha AS fecha_m,
+                            movimientos.hasta AS galpn_actual,
+                            CONCAT_WS(" ", "N°: ", galpon.numero, " Tipo: ", tipo_galpon.tipo_galpon ) AS galpon_nuevo,
+                            cerdo.codigo,
+                            cerdo.sexo,
+                            raza.raza,
+                            cerdo.foto,
+                            cerdo.nombre 
+                            FROM
+                            movimientos
+                            INNER JOIN galpon_cerdo ON movimientos.id_g_c = galpon_cerdo.id_galpon_cerdo
+                            INNER JOIN galpon ON galpon_cerdo.id_galpon = galpon.id_galpon
+                            INNER JOIN cerdo ON galpon_cerdo.id_cerdo = cerdo.id_cerdo
+                            INNER JOIN raza ON cerdo.raza = raza.id_raza
+                            INNER JOIN tipo_galpon ON galpon.id_tipo = tipo_galpon.id_tipo ORDER BY movimientos.id_m DESC""")
+            data = query.fetchall()
+            query.close()
+            return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+
+    # modelo para movimientos de cerdos de galpones por fechas
+    def Movimientos_cerdo_fecha(f_i, f_f):
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                            movimientos.fecha AS fecha_m,
+                            movimientos.hasta AS galpn_actual,
+                            CONCAT_WS(" ", "N°: ", galpon.numero, " Tipo: ", tipo_galpon.tipo_galpon ) AS galpon_nuevo,
+                            cerdo.codigo,
+                            cerdo.sexo,
+                            raza.raza,
+                            cerdo.foto,
+                            cerdo.nombre 
+                            FROM
+                            movimientos
+                            INNER JOIN galpon_cerdo ON movimientos.id_g_c = galpon_cerdo.id_galpon_cerdo
+                            INNER JOIN galpon ON galpon_cerdo.id_galpon = galpon.id_galpon
+                            INNER JOIN cerdo ON galpon_cerdo.id_cerdo = cerdo.id_cerdo
+                            INNER JOIN raza ON cerdo.raza = raza.id_raza
+                            INNER JOIN tipo_galpon ON galpon.id_tipo = tipo_galpon.id_tipo 
+                            WHERE movimientos.fecha between "{0}" AND "{1}" ORDER BY movimientos.id_m DESC""".format(f_i, f_f))
+            data = query.fetchall()
+            query.close()
+            return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+
 

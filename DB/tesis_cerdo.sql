@@ -11,7 +11,7 @@
  Target Server Version : 80028
  File Encoding         : 65001
 
- Date: 19/09/2022 13:19:30
+ Date: 21/09/2022 11:21:33
 */
 
 SET NAMES utf8mb4;
@@ -86,8 +86,8 @@ CREATE TABLE `galpon`  (
 -- ----------------------------
 -- Records of galpon
 -- ----------------------------
-INSERT INTO `galpon` VALUES (1, '123', 2, 1, 'para criar chancho', 1);
-INSERT INTO `galpon` VALUES (2, '321', 2, 5, 'aaa', 1);
+INSERT INTO `galpon` VALUES (1, '123', 2, 3, 'para criar chancho', 1);
+INSERT INTO `galpon` VALUES (2, '321', 1, 5, 'aaa', 1);
 
 -- ----------------------------
 -- Table structure for galpon_cerdo
@@ -104,13 +104,32 @@ CREATE TABLE `galpon_cerdo`  (
   INDEX `id_cerdo`(`id_cerdo`) USING BTREE,
   CONSTRAINT `galpon_cerdo_ibfk_1` FOREIGN KEY (`id_galpon`) REFERENCES `galpon` (`id_galpon`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `galpon_cerdo_ibfk_2` FOREIGN KEY (`id_cerdo`) REFERENCES `cerdo` (`id_cerdo`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_spanish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_spanish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of galpon_cerdo
 -- ----------------------------
-INSERT INTO `galpon_cerdo` VALUES (6, 2, 1, '2022-09-19', 1);
-INSERT INTO `galpon_cerdo` VALUES (7, 2, 2, '2022-09-19', 1);
+INSERT INTO `galpon_cerdo` VALUES (6, 1, 1, '2022-09-21', 1);
+INSERT INTO `galpon_cerdo` VALUES (7, 2, 2, '2022-09-20', 1);
+
+-- ----------------------------
+-- Table structure for movimientos
+-- ----------------------------
+DROP TABLE IF EXISTS `movimientos`;
+CREATE TABLE `movimientos`  (
+  `id_m` int NOT NULL AUTO_INCREMENT,
+  `id_g_c` int NULL DEFAULT NULL,
+  `fecha` date NULL DEFAULT NULL,
+  `hasta` varchar(255) CHARACTER SET utf8 COLLATE utf8_spanish_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id_m`) USING BTREE,
+  INDEX `id_g_c`(`id_g_c`) USING BTREE,
+  CONSTRAINT `movimientos_ibfk_1` FOREIGN KEY (`id_g_c`) REFERENCES `galpon_cerdo` (`id_galpon_cerdo`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_spanish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of movimientos
+-- ----------------------------
+INSERT INTO `movimientos` VALUES (15, 6, '2022-09-21', 'N°: 321 - Tipo: lote editado');
 
 -- ----------------------------
 -- Table structure for raza

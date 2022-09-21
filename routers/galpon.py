@@ -110,3 +110,23 @@ def registrar_cerdo_galpon():
             dato = Galpon.Registrar_cerdo_galpon(_id, valor[0], valor[1])         
         return jsonify(dato)
 
+# controlador para pasar el cerdo a otro galpon
+@galpon.route('/editar_cerdo_galpon', methods=['POST'])
+def editar_cerdo_galpon():
+    if request.method == 'POST':
+
+        _id_f = request.form['id_f']
+        _id_a = request.form['id_actual']
+        _id_n = request.form['id_nuevo']
+        _id_c = request.form['id_c'] 
+        _fecha = request.form['fecha'] 
+        _text = request.form['text'] 
+
+        id_f = _id_f.split(",")
+        id_c = _id_c.split(",")
+        fecha = _fecha.split(",") 
+
+        for valor in zip(id_c, fecha, id_f):
+            dato = Galpon.Editar_cerdo_galpon(_id_a, _id_n, valor[0], valor[1], valor[2], _text)  
+        return jsonify(dato)
+

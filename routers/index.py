@@ -141,3 +141,40 @@ def create_galpon_cerdo():
     data = Galpon.Listar_galpon_combo()
     return render_template('view/galpon/create_galpon_cerdo.html', data = data)
 
+#ver los cerdos del galpon
+@index.route('/ver_cerdos_galpo/<int:id>')
+def ver_cerdos_galpo(id): 
+    data = Galpon.Listar_galpon_combo()
+    cerdos = Galpon.Listar_cerdos_galpon_tabla(id)
+    dicc = {
+        'data': data,
+        'cerdos': cerdos,
+        'id': id
+    }
+    return render_template('view/galpon/cerdos_galpo.html', dicc = dicc)
+
+#ver los cerdos del galpon por ajax
+@index.route('/cedos_galpon', methods=['POST'])
+def cedos_galpon(): 
+    id = request.form['id'] 
+    data = Galpon.Listar_cerdos_galpon(id) 
+    return jsonify(data)
+
+#vista movimientos de cerdos de galpones
+@index.route('/movimientos_cerdo')
+def movimientos_cerdo():  
+    cerdos = Galpon.Movimientos_cerdo()
+    dicc = { 
+        'cerdos': cerdos
+    }
+    return render_template('view/galpon/movimientos_cerdo.html', dicc = dicc)
+
+#vista movimientos de cerdos de galpones por fechas
+@index.route('/movimientos_cerdo_fecha/<string:f_i>/<string:f_f>')
+def movimientos_cerdo_fecha(f_i, f_f):  
+    cerdos = Galpon.Movimientos_cerdo_fecha(f_i, f_f)
+    print(cerdos)
+    dicc = { 
+         'cerdos': cerdos
+    }
+    return render_template('view/galpon/movimientos_cerdo.html', dicc = dicc)

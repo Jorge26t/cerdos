@@ -5,3 +5,8 @@ pip install flask
 Mysql conexion
 pip install flask_MySq, pip install flask-mysqldb, 
 pip install Flask-MySQL
+
+
+
+para el mysql del pythonanywhere subir la base de datos
+USE jorge69$Cerdo; SOURCE cerdos/DB/tesis_cerdo.sql;

@@ -4,8 +4,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CONTROL DE PRODUCCIÓN</title>
-
+  <title>Control de producción</title>
+  <link rel="icon" href="{{url_for('static', filename='uploads/cerdito.png')}}">
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback" />
@@ -64,8 +64,8 @@
   <div class="wrapper">
     <!-- Preloader -->
     <div class="preloader flex-column justify-content-center align-items-center">
-      <img class="animation__shake" src="{{url_for('static', filename='Admin/dist/img/AdminLTELogo.png')}}"
-        alt="AdminLTELogo" height="60" width="60" />
+      <img class="animation__shake" src="{{url_for('static', filename='uploads/cerdito.png')}}"
+        alt="AdminLTELogo" height="150" width="150" />
     </div>
 
     <!-- Navbar -->
@@ -121,10 +121,25 @@
 
         <script type="text/javascript">
           function cerar_sesion() {
-            var mensaje = confirm("¿Desea cerrar sesión?");
-            if (mensaje) {
-              window.location.href = "/cerrar_sesion";
-            }
+            //var mensaje = confirm("¿Desea cerrar sesión?");
+            //if (mensaje) {
+
+              Swal.fire({
+                title: 'Cerrar sesión?',
+                text: "La sesión de usuario se cerrará!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, cerrar!'
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  window.location.href = "/cerrar_sesion";
+                }
+              })
+
+             
+            //}
           }
         </script>
       </ul>
@@ -266,6 +281,12 @@
                   <a onclick="cargar_contenido('contenido_principal','/list_galpon_cerdo');" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Galpón cerdos</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a onclick="cargar_contenido('contenido_principal','/movimientos_cerdo');" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Movimientos de cerdos</p>
                   </a>
                 </li>
               </ul>

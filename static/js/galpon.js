@@ -915,29 +915,27 @@ function verificar_cerdo_id(id) {
 }
 
 function registrar_cerdo_galpon() {
-  
   Swal.fire({
-    title: 'Guardar registro?',
+    title: "Guardar registro?",
     text: "El registro del galpón cerdo se guardará!",
-    icon: 'warning',
+    icon: "warning",
     showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Si, guardar!'
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Si, guardar!",
   }).then((result) => {
     if (result.isConfirmed) {
       registra_datos();
     }
-  })
+  });
 }
 
-function  registra_datos() {
-  
+function registra_datos() {
   var id_galpon = $("#id_galpon").val();
   var capacidad = $("#capacidad").val();
   var disponibe = $("#disponibe").val();
 
-  if (id_galpon == "0" || id_galpon.length == 0) { 
+  if (id_galpon == "0" || id_galpon.length == 0) {
     $("#id_galpon_obligg").html("Seleccione el galpón");
     return swal.fire(
       "Seleccione el galpón",
@@ -948,8 +946,7 @@ function  registra_datos() {
     $("#id_galpon_obligg").html("");
   }
 
-  if(parseInt(disponibe) > parseInt(capacidad)){
- 
+  if (parseInt(disponibe) > parseInt(capacidad)) {
     $("#capacidad_obligg").html("XXX");
     $("#disponibe_obligg").html("XXX");
 
@@ -962,21 +959,18 @@ function  registra_datos() {
     $("#capacidad_obligg").html("");
     $("#disponibe_obligg").html("");
   }
-  
+
   var count = 0;
   var arrego_id = new Array();
-  var arreglo_fecha = new Array(); 
+  var arreglo_fecha = new Array();
 
-  $("#tabla_galpo_cerdo tbody#tbody_tabla_galpo_cerdo tr").each(
-    function () {
-      arrego_id.push($(this).find("td").eq(0).text());
-      arreglo_fecha.push($(this).find("td").eq(1).text()); 
-      count++;
-    }
-  );
+  $("#tabla_galpo_cerdo tbody#tbody_tabla_galpo_cerdo tr").each(function () {
+    arrego_id.push($(this).find("td").eq(0).text());
+    arreglo_fecha.push($(this).find("td").eq(1).text());
+    count++;
+  });
 
-  if(parseInt(count) > parseInt(disponibe)){
- 
+  if (parseInt(count) > parseInt(disponibe)) {
     $("#capacidad_obligg").html("XXX");
     $("#disponibe_obligg").html("XXX");
 
@@ -992,15 +986,11 @@ function  registra_datos() {
     $("#disponibe_obligg").html("");
     $("#detalle_tabla").html("");
   }
-  
-  if(parseInt(count) == 0){  
+
+  if (parseInt(count) == 0) {
     $("#detalle_tabla").html("No hay datos en la tabla de los cerdos");
-    return swal.fire(
-      "No hay cerdos",
-      "Ingrese cerdos en la tabla",
-      "warning"
-    );
-  } else { 
+    return swal.fire("No hay cerdos", "Ingrese cerdos en la tabla", "warning");
+  } else {
     $("#detalle_tabla").html("");
   }
 
@@ -1009,26 +999,24 @@ function  registra_datos() {
 
   $.ajax({
     url: "/galpon/registrar_cerdo_galpon",
-    type: "POST", 
-    data: {id_galpon: id_galpon, id_c: id_c, fecha: fecha}, 
+    type: "POST",
+    data: { id_galpon: id_galpon, id_c: id_c, fecha: fecha },
     success: function (resp) {
-
       $(".card").LoadingOverlay("hide");
-      if(resp == 1){
-        cargar_contenido('contenido_principal','/create_galpon_cerdo');
+      if (resp == 1) {
+        cargar_contenido("contenido_principal", "/create_galpon_cerdo");
         return Swal.fire(
-          'Datos registrados',
-          'Los cerdos se registrarón el en galpón!',
-          'success'
-        )
-      }else{
+          "Datos registrados",
+          "Los cerdos se registrarón el en galpón!",
+          "success"
+        );
+      } else {
         return Swal.fire(
-          'Error',
-          'Error al registra los datos en el sistema!',
-          'error'
-        )
+          "Error",
+          "Error al registra los datos en el sistema!",
+          "error"
+        );
       }
-      
     },
     beforeSend: function () {
       $(".card").LoadingOverlay("show", {
@@ -1038,6 +1026,132 @@ function  registra_datos() {
   });
 }
 
-function ver_cerdos(id){
-  alert("id del galpon: " + id)
+///mover cerdo galpon
+function editar_cambios_galpon() {
+  Swal.fire({
+    title: "Guardar registro?",
+    text: "El registro del galpón cerdo se guardará!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Si, guardar!",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      editar_cambios_galpon_datos();
+    }
+  });
+}
+
+function editar_cambios_galpon_datos() {
+  var id_actual = $("#galpo_actual_cerdo").val();
+  var id_nuevo = $("#id_galpon_nuevo").val();
+  var text = $('#galpo_actual_cerdo option:selected').text();
+
+  var capacidad = $("#capacidad_n").val();
+  var disponibe = $("#disponibe_n").val();
+
+  if (id_actual == "0" || id_actual.length == 0) {
+    $("#id_galpon_nuevo_obligg").html("Seleccione el galpón");
+    return swal.fire(
+      "Seleccione el galpón",
+      "Debe seleccionar el galpón para ingresar al cerdo",
+      "warning"
+    );
+  } else {
+    $("#id_galpon_nuevo_obligg").html("");
+  }
+
+  if (parseInt(disponibe) > parseInt(capacidad)) {
+    $("#capacidad_obligg_n").html("XXX");
+    $("#disponibe_obligg_n").html("XXX");
+
+    return swal.fire(
+      "Capacidad no disponible",
+      "La cantidad supera la capacidad",
+      "warning"
+    );
+  } else {
+    $("#capacidad_obligg_n").html("");
+    $("#disponibe_obligg_n").html("");
+  }
+
+  var count = 0;
+  var arrego_id_f = new Array();
+  var arrego_id = new Array();
+  var arreglo_fecha = new Array();
+
+  $("#tabla_devolvor tbody#tbody_tabla_devolvor tr").each(function () {
+    arrego_id_f.push($(this).find("td").eq(0).text());
+    arrego_id.push($(this).find("td").eq(1).text());
+    arreglo_fecha.push($(this).find("td").eq(2).text());
+    count++;
+  });
+
+  if (parseInt(count) > parseInt(disponibe)) {
+    $("#capacidad_obligg_n").html("XXX");
+    $("#disponibe_obligg_n").html("XXX");
+
+    $("#detalle_tabla_n").html("Cantidad en la tabla supera la capacidad");
+
+    return swal.fire(
+      "Capacidad no disponible",
+      "La cantidad supera la capacidad",
+      "warning"
+    );
+  } else {
+    $("#capacidad_obligg_n").html("");
+    $("#disponibe_obligg_n").html("");
+    $("#detalle_tabla_n").html("");
+  }
+
+  if (parseInt(count) == 0) {
+    $("#detalle_tabla_n").html("No hay datos en la tabla de los cerdos");
+    return swal.fire("No hay cerdos", "Ingrese cerdos en la tabla", "warning");
+  } else {
+    $("#detalle_tabla_n").html("");
+  }
+
+  var id_f = arrego_id_f.toString();
+  var id_c = arrego_id.toString();
+  var fecha = arreglo_fecha.toString();
+  var Id_global = $("#Id_global").val();
+
+  $.ajax({
+    url: "/galpon/editar_cerdo_galpon",
+    type: "POST",
+    data: {
+      id_f: id_f,
+      id_actual: id_actual,
+      id_nuevo: id_nuevo,
+      id_c: id_c,
+      fecha: fecha,
+      text: text
+    },
+    success: function (resp) {
+      $(".card").LoadingOverlay("hide");
+      if (resp == 1) {
+        cargar_contenido(
+          "contenido_principal",
+          "/ver_cerdos_galpo/" + Id_global
+        );
+        return Swal.fire(
+          "Cerdos transferidos",
+          "Los cerdos se pasaron al galpón seleccionado!",
+          "success"
+        );
+      } else {
+        return Swal.fire(
+          "Error",
+          "Error al pasar los cerdos a otro galpón!",
+          "error"
+        );
+      }
+    },
+    beforeSend: function () {
+      $(".card").LoadingOverlay("show", {
+        text: "Cargando...",
+      });
+    },
+  });
 }
