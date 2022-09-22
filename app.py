@@ -5,6 +5,7 @@ from routers.index import index
 from routers.usuario import usuario
 from routers.cerdo import cerdo
 from routers.galpon import galpon
+from routers.reporte import reporte
 
 app = Flask(__name__)
 app.secret_key = 'my_secret_key'
@@ -23,6 +24,7 @@ app.register_blueprint(index, url_prefix="/")
 app.register_blueprint(usuario, url_prefix="/usuario")
 app.register_blueprint(cerdo, url_prefix="/cerdo")
 app.register_blueprint(galpon, url_prefix="/galpon")
+app.register_blueprint(reporte, url_prefix="/reporte")
 
 #esta funcion ayuda controlar los errores cuanod no hay paginas
 def pagna_error(error):
