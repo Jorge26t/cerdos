@@ -356,3 +356,198 @@ function validar_password(password_ac, password_n, confirmar_p) {
     $("#confirmar_p_obligg").html("");
   }
 }
+
+
+//////////// fotos de la pagina web
+/////////////// subiir fotos de la página web
+function subir_foto_1() {
+  var foto1 = document.getElementById("foto1").value;
+  var foto1_ruta = document.getElementById("foto1_ruta").value;
+
+  if (foto1.length == 0) {
+    return swal.fire("No hay foto", "Debe ingresar la foto", "warning");
+  }
+
+  var formdata = new FormData();
+  var foto = $("#foto1")[0].files[0];
+  //est valores son como los que van en la data del ajax
+
+  formdata.append("foto", foto);
+  formdata.append("ruta_actual", foto1_ruta); 
+
+  $.ajax({
+    url: "/web/subir_foto_1",
+    type: "POST",
+    //aqui envio toda la formdata
+    data: formdata,
+    contentType: false,
+    processData: false,
+    success: function (resp) {
+      if (resp > 0) {
+        if (resp == 1) {
+          cargar_contenido('contenido_principal','/pag_web');
+          return Swal.fire(
+            "Imgen subida",
+            "La imagen de la web se actualizó con exito",
+            "success"
+          );
+        }
+      } else {
+        return Swal.fire(
+          "Error",
+          "La imagen no se puedo actualizar",
+          "error"
+        );
+      }
+    },
+  });
+  return false;
+}
+
+function subir_foto_2() {
+  var foto2 = document.getElementById("foto2").value;
+  var foto2_ruta = document.getElementById("foto2_ruta").value;
+
+  if (foto2.length == 0) {
+    return swal.fire("No hay foto", "Debe ingresar la foto", "warning");
+  }
+
+  var formdata = new FormData();
+  var foto = $("#foto2")[0].files[0];
+  //est valores son como los que van en la data del ajax
+
+  formdata.append("foto", foto);
+  formdata.append("ruta_actual", foto2_ruta); 
+
+  $.ajax({
+    url: "/web/subir_foto_2",
+    type: "POST",
+    //aqui envio toda la formdata
+    data: formdata,
+    contentType: false,
+    processData: false,
+    success: function (resp) {
+      if (resp > 0) {
+        if (resp == 1) {
+          cargar_contenido('contenido_principal','/pag_web');
+          return Swal.fire(
+            "Imgen subida",
+            "La imagen de la web se actualizó con exito",
+            "success"
+          );
+        }
+      } else {
+        return Swal.fire(
+          "Error",
+          "La imagen no se puedo actualizar",
+          "error"
+        );
+      }
+    },
+  });
+  return false;
+}
+
+function subir_foto_3() {
+  var foto3 = document.getElementById("foto3").value;
+  var foto3_ruta = document.getElementById("foto3_ruta").value;
+
+  if (foto3.length == 0) {
+    return swal.fire("No hay foto", "Debe ingresar la foto", "warning");
+  }
+
+  var formdata = new FormData();
+  var foto = $("#foto3")[0].files[0];
+  //est valores son como los que van en la data del ajax
+
+  formdata.append("foto", foto);
+  formdata.append("ruta_actual", foto3_ruta); 
+
+  $.ajax({
+    url: "/web/subir_foto_3",
+    type: "POST",
+    //aqui envio toda la formdata
+    data: formdata,
+    contentType: false,
+    processData: false,
+    success: function (resp) {
+      if (resp > 0) {
+        if (resp == 1) {
+          cargar_contenido('contenido_principal','/pag_web');
+          return Swal.fire(
+            "Imgen subida",
+            "La imagen de la web se actualizó con exito",
+            "success"
+          );
+        }
+      } else {
+        return Swal.fire(
+          "Error",
+          "La imagen no se puedo actualizar",
+          "error"
+        );
+      }
+    },
+  });
+  return false;
+}
+
+function editar_detalle_foto() {
+  var detalle1 = $("#detalle_1").val();
+  var detalle2 = $("#detalle_2").val();
+  var detalle3 = $("#detalle_3").val();
+
+  if (detalle1.length == 0 || detalle2.length == 0 || detalle3.length == 0 ||
+    detalle1.trim() == "" || detalle2.trim() == "" || detalle3.trim() == "") {
+    if (detalle1.length == 0 || detalle1.trim() == "") {
+      $("#lbldetalle_1").html("Ingrese detalle");
+    } else {
+      $("#lbldetalle_1").html("");
+    }
+
+    if (detalle2.length == 0 || detalle2.trim() == "") {
+      $("#lbldetalle_2").html("Ingrese detalle");
+    } else {
+      $("#lbldetalle_2").html("");
+    }
+
+    if (detalle3.length == 0 || detalle3.trim() == "") {
+      $("#lbldetalle_3").html("Ingrese detalle");
+    } else {
+      $("#lbldetalle_3").html("");
+    }
+
+    return swal.fire("Campos vacios", "NO debe dejar campos de texto vacios", "warning");
+  }else{
+    $("#lbldetalle_1").html("");
+    $("#lbldetalle_2").html("");
+    $("#lbldetalle_3").html("");
+  }
+
+  $.ajax({
+    url: "/web/detalle_de_web",
+    type: "POST",
+    data: { 
+      detalle1: detalle1,
+      detalle2: detalle2,
+      detalle3: detalle3
+    },
+  }).done(function (resp) {
+    if (resp > 0) {
+      if (resp == 1) {
+        cargar_contenido('contenido_principal','/pag_web');
+        return Swal.fire(
+          "Datos actualizados",
+          "Los datos se actualizarón con exito",
+          "success"
+        );
+      }
+    } else {
+      return Swal.fire(
+        "Error",
+        "No se puedo actualizar los datos",
+        "error"
+      );
+    }
+  });
+}

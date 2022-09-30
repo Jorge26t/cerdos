@@ -445,4 +445,20 @@ class Galpon():
             return error
         return 0
 
-
+    # modelo para listar el cerdo dentro de un galpon
+    def Select_cerdos():
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+            cerdo.id_cerdo, cerdo.codigo, cerdo.nombre, cerdo.sexo, raza.raza, cerdo.raza,
+            cerdo.peso, cerdo.origen, cerdo.fecha, cerdo.detalle,
+            cerdo.foto, cerdo.estado, cerdo.galpon 
+            FROM cerdo INNER JOIN raza ON cerdo.raza = raza.id_raza WHERE cerdo.galpon ='si' AND cerdo.estado = 1""")
+            data = query.fetchall()
+            query.close() 
+            return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0

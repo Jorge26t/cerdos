@@ -125,75 +125,75 @@
         document.getElementById("fecha_f").value = y + "-" + m + "-" + d; 
     });
 
-$("#tabla_movimientos").DataTable({
-    language: {
-        rows: "%d fila seleccionada",
-        processing: "Tratamiento en curso...",
-        search: "Buscar&nbsp;:",
-        lengthMenu: "Agrupar en _MENU_ items",
-        info: "Mostrando los item (_START_ al _END_) de un total _TOTAL_ items",
-        infoEmpty: "No existe datos.",
-        infoFiltered: "(filtrado de _MAX_ elementos en total)",
-        infoPostFix: "",
-        loadingRecords: "Cargando...",
-        zeroRecords: "No se encontro resultados en tu busqueda",
-        emptyTable: "No hay movimientos disponibles en la tabla",
-        paginate: {
-          first: "Primero",
-          previous: "Anterior",
-          next: "Siguiente",
-          last: "Ultimo",
+    $("#tabla_movimientos").DataTable({
+        language: {
+            rows: "%d fila seleccionada",
+            processing: "Tratamiento en curso...",
+            search: "Buscar&nbsp;:",
+            lengthMenu: "Agrupar en _MENU_ items",
+            info: "Mostrando los item (_START_ al _END_) de un total _TOTAL_ items",
+            infoEmpty: "No existe datos.",
+            infoFiltered: "(filtrado de _MAX_ elementos en total)",
+            infoPostFix: "",
+            loadingRecords: "Cargando...",
+            zeroRecords: "No se encontro resultados en tu busqueda",
+            emptyTable: "No hay movimientos disponibles en la tabla",
+            paginate: {
+            first: "Primero",
+            previous: "Anterior",
+            next: "Siguiente",
+            last: "Ultimo",
+            },
+            select: {
+            rows: "%d fila seleccionada",
+            },
+            aria: {
+            sortAscending: ": active para ordenar la columa en orden ascendente",
+            sortDescending: ": active para ordenar la columna en orden descendente",
+            },
         },
-        select: {
-          rows: "%d fila seleccionada",
-        },
-        aria: {
-          sortAscending: ": active para ordenar la columa en orden ascendente",
-          sortDescending: ": active para ordenar la columna en orden descendente",
-        },
-      },
 
-      select: true,
-      responsive: "true",
-      dom: "Bfrtilp",
-      buttons: [
-        {
-          extend: "excelHtml5",
-          text: "Excel",
-          titleAttr: "Exportar a Excel",
-          className: "btn btn-success greenlover",
-        },
-        {
-          extend: "pdfHtml5",
-          text: "PDF",
-          titleAttr: "Exportar a PDF",
-          className: "btn btn-danger redfule",
-        },
-        {
-          extend: "print",
-          text: "Imprimir",
-          titleAttr: "Imprimir",
-          className: "btn btn-primary azuldete",
-        },
-      ],
-});
+        select: true,
+        responsive: "true",
+        dom: "Bfrtilp",
+        buttons: [
+            {
+            extend: "excelHtml5",
+            text: "Excel",
+            titleAttr: "Exportar a Excel",
+            className: "btn btn-success greenlover",
+            },
+            {
+            extend: "pdfHtml5",
+            text: "PDF",
+            titleAttr: "Exportar a PDF",
+            className: "btn btn-danger redfule",
+            },
+            {
+            extend: "print",
+            text: "Imprimir",
+            titleAttr: "Imprimir",
+            className: "btn btn-primary azuldete",
+            },
+        ],
+    });
 
-function cargar_fechas(){
-    var f_i = document.getElementById("fecha_i").value;
-    var f_f = document.getElementById("fecha_f").value;
+    function cargar_fechas(){
+        var f_i = document.getElementById("fecha_i").value;
+        var f_f = document.getElementById("fecha_f").value;
 
-    if (f_i > f_f) {
-        return Swal.fire(
-            "Mensaje de advertencia",
-            "La fecha inicio '" +
-            f_i +
-            "' es mayor a la fecha final '" +
-            f_f +
-            "'",
-            "warning"
-        );
+        if (f_i > f_f) {
+            return Swal.fire(
+                "Mensaje de advertencia",
+                "La fecha inicio '" +
+                f_i +
+                "' es mayor a la fecha final '" +
+                f_f +
+                "'",
+                "warning"
+            );
+        }
+
+        cargar_contenido('contenido_principal','/movimientos_cerdo_fecha/'+f_i+'/'+f_f+'');
     }
-
-    cargar_contenido('contenido_principal','/movimientos_cerdo_fecha/'+f_i+'/'+f_f+'');
-}
 </script>

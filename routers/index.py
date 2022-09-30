@@ -1,12 +1,16 @@
+from webbrowser import Galeon
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask import jsonify, session
 
+from models.alimento import Alimento
 from models.usuario import Usuario
 from models.cerdo import Cerdo
 from models.galpon import Galpon 
+from models.compras import Compras 
+from models.web import Web  
 
 from utils.Complemento import Complement
-from datetime import date, datetime
+from datetime import datetime
 import random
 
 # es un enrutador
@@ -16,7 +20,8 @@ index = Blueprint('index', __name__)
 # esto es el index que muestra cuando inicia el sistema
 @index.route('/')
 def Index():
-    return render_template('Web/index.html')
+    dato = Web.Traer_datos_web()   
+    return render_template('Web/index.html', dato = dato)
 
 # esto es el login que muestra cuando inicia el sistema
 @index.route('/Login')
@@ -39,7 +44,8 @@ def Admin():
 #vista pagina web
 @index.route('/pag_web')
 def pag_web(): 
-    return render_template('view/home/pag_web.html')
+    dato = Web.Traer_datos_web()
+    return render_template('view/home/pag_web.html', dato = dato)
 
 # controlador del inicio de sesión
 @index.route('/Ingreso', methods=['POST'])
@@ -178,3 +184,115 @@ def movimientos_cerdo_fecha(f_i, f_f):
          'cerdos': cerdos
     }
     return render_template('view/galpon/movimientos_cerdo.html', dicc = dicc)
+
+#vista tipo de alimento
+@index.route('/tipo_alimento')
+def tipo_alimento():  
+    return render_template('view/alimento/tipo_alimento.html')
+
+#vista marca de alimento
+@index.route('/marca_alimento')
+def marca_alimento():  
+    return render_template('view/alimento/marca_alimento.html')
+
+#vista alimento de cerdos
+@index.route('/alimento')
+def alimento():  
+    codigo = random.randint(0, 999999999)
+    data = Alimento.Traer_tipo_alimento_select()
+    marca = Alimento.Traer_marca_alimento_select()
+    return render_template('view/alimento/alimento.html', codigo = codigo, data = data, marca = marca)
+
+#vista alimento de cerdos
+@index.route('/proveedor')
+def proveedor():    
+    return render_template('view/compras/proveedor.html')
+
+#vista compras de alimentoa
+@index.route('/compra_alimento')
+def compra_alimento():   
+    fecha = datetime.now()
+    now = fecha.strftime("%Y-%m-%d")
+    proveedor = Compras.Select_proveedor()
+    alimentos = Compras.Table_alimentos()
+    list_compras = Compras.Listar_compras_alimentos()
+    data = {
+        'fecha': now,
+        'proveedor': proveedor,
+        'alimentos': alimentos,
+        'lista': list_compras
+    }
+    return render_template('view/compras/compra_alimento.html', data = data)
+
+#vista tipo de alimentacion
+@index.route('/tipo_alimentacion')
+def tipo_alimentacion():    
+    return render_template('view/alimento/tipo_alimentacion.html')
+
+#vista alimentaion de cerdos
+@index.route('/alimentacion_cerdos')
+def alimentacion_cerdos():  
+    fecha = datetime.now()
+    now = fecha.strftime("%Y-%m-%d")
+    tipo = Alimento.Traer_tipo_alimento_select() 
+    tipo_a = Alimento.Traer_tipo_alimentacion_select() 
+    galpon = Galpon.Listar_galpon_combo() 
+    alimentacion = Alimento.Listar_alimentacion()
+    cerdo = Galpon.Select_cerdos() 
+    data = {
+        'fecha': now,
+        'tipo': tipo, 
+        'tipo_a': tipo_a,
+        'galpon': galpon,
+        'alimentacion': alimentacion,
+        'cerdo': cerdo, 
+    }  
+    return render_template('view/alimento/alimentacion_cerdos.html', data = data)
+
+#vista movimientos de cerdos de galpones por fechas
+@index.route('/alimentacion_cerdos_fecha/<string:f_i>/<string:f_f>')
+def alimentacion_cerdos_fecha(f_i, f_f):  
+    fecha = datetime.now()
+    now = fecha.strftime("%Y-%m-%d")
+    tipo = Alimento.Traer_tipo_alimento_select() 
+    tipo_a = Alimento.Traer_tipo_alimentacion_select() 
+    galpon = Galpon.Listar_galpon_combo() 
+    alimentacion = Alimento.Listar_alimentacion_fecha(f_i,f_f)
+    cerdo = Galpon.Select_cerdos() 
+    data = {
+        'fecha': now,
+        'tipo': tipo, 
+        'tipo_a': tipo_a,
+        'galpon': galpon,
+        'alimentacion': alimentacion,
+        'cerdo': cerdo, 
+    }  
+    return render_template('view/alimento/alimentacion_cerdos.html', data = data)
+
+#vista del pesaje de los cerdos
+@index.route('/peso_cerdo')
+def peso_cerdo():    
+    fecha = datetime.now()
+    now = fecha.strftime("%Y-%m-%d")
+    cerdo = Galpon.Select_cerdos() 
+    pesaje = Alimento.Listar_pesaje_cerdo()
+    data = {
+        'fecha': now,
+        'cerdo': cerdo,  
+        'pesaje': pesaje
+    } 
+    return render_template('view/alimento/peso_cerdo.html', data = data)
+
+#vista movimientos de cerdos de galpones por fechas
+@index.route('/peso_cerdos_fecha/<string:f_i>/<string:f_f>')
+def peso_cerdos_fecha(f_i, f_f):  
+    fecha = datetime.now()
+    now = fecha.strftime("%Y-%m-%d")
+    cerdo = Galpon.Select_cerdos() 
+    pesaje = Alimento.Listar_pesaje_cerdo_fecha(f_i, f_f)
+    data = {
+        'fecha': now,
+        'cerdo': cerdo,  
+        'pesaje': pesaje
+    } 
+    return render_template('view/alimento/peso_cerdo.html', data = data)
