@@ -1619,7 +1619,7 @@ function editar_tipo_alimentacion() {
 }
 
 ///////////////// alimentacion del cerdo
-function registrar_alimentacion_cerdo(){
+function registrar_alimentacion_cerdo_comer(){
   Swal.fire({
     title: 'Guardar alimentación?',
     text: "La alimentación se guardará en el sistema!",
@@ -1825,8 +1825,8 @@ function guardar_detalle_alimentacion(id){
           confirmButtonText: "Si, Imprimir!!",
         }).then((result) => {
           if (result.value) {
-            // window.open("/reporte/compra_alimento/" + parseInt(id) + "#zoom=100%", "Reporte de compra","scrollbards=No");
-            // cargar_contenido('contenido_principal','/compra_alimento');
+            window.open("/reporte/reporte_alimentacion/" + parseInt(id) + "#zoom=100%", "Reporte de alimentación","scrollbards=No");
+            cargar_contenido('contenido_principal','/alimentacion_cerdos');
           }
         });
         cargar_contenido('contenido_principal','/alimentacion_cerdos');
@@ -1845,7 +1845,7 @@ function guardar_detalle_alimentacion(id){
 
 /////////////////
 ////////////// para el peso del cerdo
-function registrar_alimentacion_cerdo(){
+function registrar_peso_cerdo(){
   Swal.fire({
     title: 'Guardar peso del cerdo?',
     text: "El pesaje del cerdo se guardará en el sistema!",

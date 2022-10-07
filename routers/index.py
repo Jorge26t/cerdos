@@ -20,8 +20,14 @@ index = Blueprint('index', __name__)
 # esto es el index que muestra cuando inicia el sistema
 @index.route('/')
 def Index():
-    dato = Web.Traer_datos_web()   
-    return render_template('Web/index.html', dato = dato)
+    dato = Web.Traer_datos_web()
+    razas = Web.Traer_datos_razas_cerdo()
+    cerdo = Web.Traer_datos_cerdos()
+    data = { 
+        'raza': razas,
+        'cerdo': cerdo
+    } 
+    return render_template('Web/index.html', dato = dato, data = data)
 
 # esto es el login que muestra cuando inicia el sistema
 @index.route('/Login')
@@ -296,3 +302,47 @@ def peso_cerdos_fecha(f_i, f_f):
         'pesaje': pesaje
     } 
     return render_template('view/alimento/peso_cerdo.html', data = data)
+
+#vista tipo de insumo
+@index.route('/tipo_insumo')
+def tipo_insumo():    
+    return render_template('view/compras/tipo_insumo.html')
+
+#vista de insumo
+@index.route('/insumo')
+def insumo():
+    codigo = random.randint(0, 999999999)
+    tipo = Compras.Combo_tipo_insumo()    
+    return render_template('view/compras/insumo.html', codigo = codigo, tipo = tipo)
+
+#vista compras de insumos
+@index.route('/compra_insumos')
+def compra_insumos():   
+    fecha = datetime.now()
+    now = fecha.strftime("%Y-%m-%d")
+    proveedor = Compras.Select_proveedor()
+    insumos = Compras.Table_insumos()
+    listar_compras = Compras.Listar_compras_insumos()
+    data = {
+        'fecha': now,
+        'proveedor': proveedor,
+        'insumo': insumos,
+        'lista': listar_compras
+    }
+    return render_template('view/compras/compra_insumos.html', data = data)
+
+#vista de veterinario
+@index.route('/veterinario')
+def veterinario():  
+    return render_template('view/enfer_trata/veterinario.html')
+
+#vista de tipo de enfermedad
+@index.route('/tipo_enfermedad')
+def tipo_enfermedad():  
+    return render_template('view/enfer_trata/tipo_enfermedad.html')
+
+#vista de tipo de tratamientos
+@index.route('/tipo_tratamientos')
+def tipo_tratamientos():  
+    return render_template('view/enfer_trata/tipo_tratamientos.html')
+

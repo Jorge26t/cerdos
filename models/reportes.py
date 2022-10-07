@@ -69,7 +69,7 @@ class Reportes():
             return error
         return 0
  
-    ######################### COMPRAS
+    ######################### COMPRAS ALIMENTOS
 
     #modelo para listar la compra del alimento
     def Listar_compra_alimento(id):
@@ -176,3 +176,63 @@ class Reportes():
             error = "Ocurrio un problema: " + str(e)
             return error
         return 0
+
+    ######################### COMPRAS INSUMOS
+
+    #modelo para listar la compra del insumo
+    def Listar_compra_insumos(id):
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                            compra_insumo.id,
+                            CONCAT_WS( ' ', usuario.nombres, usuario.apellidos ) AS usuario,
+                            CONCAT_WS( ' ', proveedor.razon) AS proveedor,
+                            proveedor.ruc,
+                            compra_insumo.fecha,
+                            compra_insumo.numero_compra,
+                            compra_insumo.documento,
+                            compra_insumo.iva,
+                            compra_insumo.subtotal,
+                            compra_insumo.impuesto,
+                            compra_insumo.total,
+                            compra_insumo.estado 
+                        FROM
+                            compra_insumo
+                            INNER JOIN usuario ON compra_insumo.usuario_id = usuario.usuario_id
+                            INNER JOIN proveedor ON compra_insumo.proveedor_id = proveedor.id WHERE compra_insumo.id='{0}'""". format(id))
+            data = query.fetchone()
+            query.close()
+            return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+      
+    #modelo para traer el detalle de la compra
+    def Detalle_compra_insumos(id):
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                            detalle_compra_insumo.compra_insumo_id,
+                            insumo.codigo,
+                            insumo.nombre,
+                            detalle_compra_insumo.precio,
+                            detalle_compra_insumo.cantidad,
+                            detalle_compra_insumo.descuento,
+                            detalle_compra_insumo.total,
+                            detalle_compra_insumo.estado 
+                        FROM
+                            detalle_compra_insumo
+                            INNER JOIN insumo ON detalle_compra_insumo.insumo_id = insumo.id 
+                        WHERE
+                            detalle_compra_insumo.compra_insumo_id = '{0}'""".format(id))
+            data = query.fetchall()
+            query.close()
+            return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+ 

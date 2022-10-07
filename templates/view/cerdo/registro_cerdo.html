@@ -52,7 +52,7 @@
 
                                 <div class="form-group col-lg-5 col-6">
                                     <label for="raza_id">Razas de cerdo</label>
-                                    <select class="form-control" style="width: 100%" id="raza_id">
+                                    <select class="form-control raza_id" style="width: 100%" id="raza_id">
                                         <option value="0">--- Seleccione la raza ---</option>
 
                                         {% for datas in data %}
@@ -124,6 +124,8 @@
 <script src="static/js/cerdos.js"></script>
 
 <script>
+    $(".raza_id").select2();
+    
     function mostrar_imagen(input) {
         var filename = document.getElementById("foto").value;
         var idxdot = filename.lastIndexOf(".") + 1;

@@ -15,6 +15,49 @@ class Web():
             return error
         return 0
 
+    # modelo de traer las razas de los cerdos
+    def Traer_datos_razas_cerdo():
+        try:
+            query = mysql.connection.cursor()
+            query.execute(' SELECT * FROM raza WHERE estado = 1')
+            data = query.fetchall()
+            query.close()
+            return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+    
+    # modelo de traer los datos de los cerdos
+    def Traer_datos_cerdos():
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                        cerdo.id_cerdo,
+                        cerdo.codigo,
+                        cerdo.nombre,
+                        cerdo.sexo,
+                        raza.raza,
+                        cerdo.peso,
+                        cerdo.foto,
+                        cerdo.estado,
+                        cerdo.galpon 
+                        FROM
+                            cerdo
+                            INNER JOIN raza ON cerdo.raza = raza.id_raza 
+                        WHERE
+                        cerdo.galpon = 'si' 
+                        AND cerdo.estado = 1""")
+            data = query.fetchall()
+            query.close()
+            return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+
     # modelo para csubir la foto de la web 1
     def Subir_foto_1(archivo):
         try:

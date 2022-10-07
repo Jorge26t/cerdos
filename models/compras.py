@@ -228,3 +228,330 @@ class Compras():
             error = "Ocurrio un problema: " + str(e)
             return error
         return 0
+
+    # modelo para registrar el tipo de insumo
+    def Registrartipo_insumo(_valor):
+        try:
+            query = mysql.connection.cursor()
+            query.execute('SELECT * FROM tipo_insumo WHERE tipo = "{0}"'. format(_valor))
+            data = query.fetchone()
+            if not data:
+                query.execute('INSERT INTO tipo_insumo (tipo) VALUES ("{0}")'.format(_valor))
+                query.connection.commit()
+                query.close()
+                return 1  # se inserto correcto
+            else:
+                query.close()
+                return 2
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+    
+    # modelo para editar el tipo de insumo
+    def Editar_tipo_insumo(_id,_dato):
+        try:
+            query = mysql.connection.cursor()
+            query.execute('SELECT * FROM tipo_insumo WHERE tipo = "{0}" AND id != "{1}"'. format(_dato, _id))
+            data = query.fetchone()
+            if not data:
+                query.execute('UPDATE tipo_insumo SET tipo = "{0}" WHERE id = "{1}"'.format(_dato, _id))
+                query.connection.commit()
+                query.close()
+                return 1  # se inserto correcto
+            else:
+                query.close()
+                return 2
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+    
+   # modelo para cambiar el estado del insumo
+    def Estado_tipo_insumo(_id,_dato):
+        try:
+            query = mysql.connection.cursor()
+            query.execute('UPDATE tipo_insumo SET estado = "{0}" WHERE id = "{1}"'.format(_dato, _id))
+            query.connection.commit()
+            query.close()
+            return 1  # se inserto correcto
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+    
+    # modelo para listar el tipo de insumo
+    def Listar_tipo_insumo():
+        try:
+            query = mysql.connection.cursor()
+            query.execute('SELECT * FROM tipo_insumo')
+            data = query.fetchall()
+            query.close()
+            new_lista = []
+            for datos in data:
+                dic = {} 
+                dic["id"] = datos[0]
+                dic["tipo"] = datos[1] 
+                dic["estado"] = datos[2]       
+                new_lista.append(dic)
+            return {"data": new_lista}
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+
+    # modelo para combo del tipo de insumo
+    def Combo_tipo_insumo():
+        try:
+            query = mysql.connection.cursor()
+            query.execute('SELECT * FROM tipo_insumo WHERE estado = 1')
+            data = query.fetchall()
+            query.close() 
+            return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+    
+    # modelo para registrar el insumo
+    def Crear_insumo(_codigo, _nombre, _tipo, _cantidad, _precio, _detalle, archivo):
+        try:
+            query = mysql.connection.cursor()
+            query.execute('SELECT * FROM insumo WHERE codigo = "{0}"'. format(_codigo))
+            data = query.fetchone()
+            if not data:
+                query.execute('INSERT INTO insumo (codigo,nombre,tipo_id,cantidad,precio,detalle,foto) VALUES ("{0}","{1}","{2}","{3}","{4}","{5}","{6}")'.format(_codigo,_nombre,_tipo,_cantidad,_precio,_detalle,archivo))
+                query.connection.commit()
+                query.close()
+                return 1  # se inserto correcto
+            else:
+                query.close()
+                return 2
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+    
+    # modelo para listar el insumo
+    def Listar_insumos():
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                            insumo.id,
+                            insumo.codigo,
+                            insumo.nombre,
+                            insumo.tipo_id,
+                            tipo_insumo.tipo,
+                            insumo.cantidad,
+                            insumo.precio,
+                            insumo.detalle,
+                            insumo.foto,
+                            insumo.estado 
+                        FROM
+                            insumo
+                            INNER JOIN tipo_insumo ON insumo.tipo_id = tipo_insumo.id""")
+            data = query.fetchall()
+            query.close()
+            new_lista = []
+            for datos in data:
+                dic = {} 
+                dic["id"] = datos[0]
+                dic["codigo"] = datos[1]
+                dic["nombre"] = datos[2] 
+                dic["tipo_id"] = datos[3]
+                dic["tipo"] = datos[4]
+                dic["cantidad"] = datos[5] 
+                dic["precio"] = datos[6]
+                dic["detalle"] = datos[7]
+                dic["foto"] = datos[8] 
+                dic["estado"] = datos[9]       
+                new_lista.append(dic)
+            return {"data": new_lista}
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+
+    # modelo para cambiar el estado del insumo
+    def Estado_insumo(_id,_dato):
+        try:
+            query = mysql.connection.cursor()
+            query.execute('UPDATE insumo SET estado = "{0}" WHERE id = "{1}"'.format(_dato, _id))
+            query.connection.commit()
+            query.close()
+            return 1  # se inserto correcto
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+    
+    # modelo para editar el insumo
+    def Editar_insumo(_codigo, _nombre, _tipo, _cantidad, _precio, _detalle, id):
+        try:
+            query = mysql.connection.cursor()
+            query.execute('SELECT * FROM insumo WHERE codigo="{0}" AND id!="{1}"'. format(_codigo,id))
+            data = query.fetchone()
+            if not data:
+                query.execute('UPDATE insumo SET codigo="{0}",nombre="{1}",tipo_id="{2}",cantidad="{3}",precio="{4}",detalle="{5}"WHERE id = "{6}"'.format(_codigo,_nombre,_tipo,_cantidad,_precio,_detalle,id))
+                query.connection.commit()
+                query.close()
+                return 1  # se inserto correcto
+            else:
+                query.close()
+                return 2
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+    
+    # modelo para cambiar la foto del insumo
+    def Cambiar_foto_insumo(_id,archivo):
+        try:
+            query = mysql.connection.cursor()
+            query.execute('UPDATE insumo SET foto = "{0}" WHERE id = "{1}"'.format(archivo, _id))
+            query.connection.commit()
+            query.close()
+            return 1  # se inserto correcto
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+    
+    # modelo para listar el insumo en la tabla de compra
+    def Table_insumos():
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                            insumo.id,
+                            insumo.codigo,
+                            insumo.nombre,
+                            insumo.tipo_id,
+                            tipo_insumo.tipo,
+                            insumo.cantidad,
+                            insumo.precio,
+                            insumo.detalle,
+                            insumo.foto,
+                            insumo.estado 
+                            FROM
+                            insumo
+                            INNER JOIN tipo_insumo ON insumo.tipo_id = tipo_insumo.id WHERE insumo.estado = 1""")
+            data = query.fetchall()
+            query.close() 
+            return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+    
+    # modelo para registrar la compra del insumo
+    def Registrar_compra_insumo(_id_pro, _fecha_c, _numero_compra, _tipo_comprobante, _iva, _subtotal, _impuesto_sub, _total_pagar, _id):
+        try:
+            query = mysql.connection.cursor()
+            query.execute('SELECT * FROM compra_insumo WHERE numero_compra = "{0}"'. format(_numero_compra))
+            data = query.fetchone()
+            if not data:
+                query.execute('INSERT INTO compra_insumo (usuario_id,proveedor_id,fecha,numero_compra,documento,iva,subtotal,impuesto,total) VALUES ("{0}","{1}","{2}","{3}","{4}","{5}","{6}","{7}","{8}")'.format(_id,_id_pro,_fecha_c,_numero_compra,_tipo_comprobante,_iva,_subtotal,_impuesto_sub,_total_pagar))
+                query.connection.commit()
+                # me devuelve el ultimo id insertado
+                id = query.lastrowid
+                query.close()
+                return id  # se inserto correcto
+            else:
+                query.close()
+                return 2
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+    
+    # modelo para registra el detalle de compra del insumo
+    def Registrar_detalle_compra_insumo(_id, ida, precio, cantidad, descuento, total):
+        try:
+            query = mysql.connection.cursor()         
+            query.execute('INSERT INTO detalle_compra_insumo (compra_insumo_id,insumo_id,precio,cantidad,descuento,total) VALUES ("{0}","{1}","{2}","{3}","{4}","{5}")'.format(_id,ida,precio,cantidad,descuento,total))
+            query.connection.commit()
+
+            query.execute('UPDATE insumo SET cantidad = cantidad + "{0}" WHERE id = "{1}" '.format(cantidad,ida))
+            query.connection.commit()
+
+            query.close()
+            return 1  # se inserto correcto
+
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+    
+    # modelo para listar las compras de insumo
+    def Listar_compras_insumos():
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                            compra_insumo.id,
+                            CONCAT_WS( ' ', usuario.nombres, usuario.apellidos ) AS usuario,
+                            CONCAT_WS( ' ', proveedor.razon, ' - ', proveedor.ruc ) AS proveedor,
+                            compra_insumo.fecha,
+                            compra_insumo.numero_compra,
+                            compra_insumo.documento,
+                            compra_insumo.iva,
+                            compra_insumo.subtotal,
+                            compra_insumo.impuesto,
+                            compra_insumo.total,
+                            compra_insumo.estado 
+                        FROM
+                            compra_insumo
+                            INNER JOIN usuario ON compra_insumo.usuario_id = usuario.usuario_id
+                            INNER JOIN proveedor ON compra_insumo.proveedor_id = proveedor.id 
+                        ORDER BY
+                            compra_insumo.id DESC""")
+            data = query.fetchall()
+            query.close() 
+            return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+
+    # modelo para anular la compra de insumo
+    def Compra_insumo_anular(_id):
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                        detalle_compra_insumo.insumo_id,
+                        detalle_compra_insumo.cantidad 
+                        FROM
+                            detalle_compra_insumo 
+                        WHERE
+                        detalle_compra_insumo.compra_insumo_id = '{0}'""".format(_id))
+            data = query.fetchall()
+            
+            for dato in data: 
+                query.execute('UPDATE insumo SET cantidad = cantidad - {0} WHERE id = "{1}"'.format(dato[1], str(dato[0])))
+                query.connection.commit()
+
+            query.execute('UPDATE compra_insumo SET estado = 0 WHERE id = {0}'.format(_id))
+            query.connection.commit()
+
+            query.execute('UPDATE detalle_compra_insumo SET estado = 0 WHERE id = "{0}"'.format(_id))
+            query.connection.commit()
+            query.close() 
+            return 1
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
