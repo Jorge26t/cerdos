@@ -741,3 +741,18 @@ class Alimento():
             error = "Ocurrio un problema: " + str(e)
             return error
         return 0
+    
+     # modelo para eliminar peso
+    def Eliminar_peso(_id):
+        try:
+            query = mysql.connection.cursor()
+            query.execute('DELETE FROM peso_cerdo WHERE peso_id = {0}'.format(_id))
+            query.connection.commit()
+            query.close()
+            return 1  # se inserto correcto
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+    

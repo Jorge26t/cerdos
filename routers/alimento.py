@@ -289,3 +289,12 @@ def traer_alimentos_del_cerdo():
         _id = request.form['id'] 
         dato = Alimento.traer_alimentos_del_cerdo(_id)  
         return jsonify(dato)
+
+# controlador para eliminar peso del cerdo
+@alimento.route('/eliminar_peso', methods=['POST'])
+def eliminar_peso():
+    if request.method == 'POST': 
+        _id = request.form['id']  
+        
+        dato = Alimento.Eliminar_peso(_id)
+        return str(dato)

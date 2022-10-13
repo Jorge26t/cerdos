@@ -7,6 +7,7 @@ from models.usuario import Usuario
 from models.cerdo import Cerdo
 from models.galpon import Galpon 
 from models.compras import Compras 
+from models.enfermedad import Enfermedad 
 from models.web import Web  
 
 from utils.Complemento import Complement
@@ -346,3 +347,96 @@ def tipo_enfermedad():
 def tipo_tratamientos():  
     return render_template('view/enfer_trata/tipo_tratamientos.html')
 
+#vista de registro cerdos enfermos
+@index.route('/registro_enfermos')
+def registro_enfermos():  
+    fecha = datetime.now()
+    now = fecha.strftime("%Y-%m-%d")
+    cerdo = Galpon.Select_cerdos() 
+    veterinario = Enfermedad.Select_veterinario()
+    enfermedades = Enfermedad.Select_enfermedades()
+    data = {
+        'fecha': now,
+        'cerdo': cerdo,
+        'vete': veterinario,
+        'enfer': enfermedades
+    }
+    return render_template('view/enfer_trata/registro_enfermos.html', data = data)
+
+#vista para listar loscerdos enfermos en espera
+@index.route('/cerdos_enfermos_espera')
+def cerdos_enfermos_espera():       
+    enfermos = Enfermedad.Listra_cerdos_enfermos_espera()
+    data = {
+        'enfer': enfermos
+    }
+    return render_template('view/enfer_trata/cerdos_enfermos_espera.html', data = data)
+
+#vista para listar loscerdos enfermos en espera
+@index.route('/tratar_cerdos')
+def tratar_cerdos(): 
+    fecha = datetime.now()
+    now = fecha.strftime("%Y-%m-%d")      
+    enfermos = Enfermedad.Listra_cerdos_enfermos_espera()
+    insumo = Compras.Table_insumos()
+    tratamiento = Enfermedad.Combo_tratamiento()
+    medicamento = Enfermedad.Combo_medicamento()
+    data = {
+        'fecha': now,
+        'enfer': enfermos,
+        'insumo': insumo,
+        'tratamiento': tratamiento,
+        'medicamento': medicamento
+    }
+    return render_template('view/enfer_trata/tratar_cerdos.html', data = data)
+
+#vista de tipo de tratamientos
+@index.route('/tipo_medicamento')
+def tipo_medicamento():  
+    return render_template('view/compras/tipo_medicamento.html')
+
+#vista de medicamentos
+@index.route('/medicamentos')
+def medicamentos():  
+    codigo = random.randint(0, 999999999)
+    tipo = Compras.Combo_tipo_medicamento()  
+    return render_template('view/compras/medicamentos.html', codigo = codigo, tipo = tipo)
+
+#vista compras de medicamento
+@index.route('/compra_medicamento')
+def compra_medicamento():   
+    fecha = datetime.now()
+    now = fecha.strftime("%Y-%m-%d")
+    proveedor = Compras.Select_proveedor()
+    medicamento = Compras.Table_medicamento()
+    listar_compras = Compras.Listar_compras_medicamento()
+    data = {
+        'fecha': now,
+        'proveedor': proveedor,
+        'insumo': medicamento,
+        'lista': listar_compras
+    }
+    return render_template('view/compras/compra_medicamento.html', data = data)
+
+#vista para listar los cerdos tratados por enfermedad
+@index.route('/cerdos_tratados')
+def cerdos_tratados():       
+    enfermos = Enfermedad.Listra_cerdos_tratados()
+    data = {
+        'enfer': enfermos
+    }
+    return render_template('view/enfer_trata/cerdos_tratados.html', data = data)
+
+#vista para listado de trataiendos de los cerdos
+@index.route('/listado_tratamientos')
+def listado_tratamientos():      
+    fecha = datetime.now()
+    now = fecha.strftime("%Y-%m-%d")  
+    tratamiendos = Enfermedad.Listado_tratamientos()
+    cerdo = Galpon.Select_cerdos() 
+    data = {
+        'fecha': now,
+        'lista': tratamiendos,
+        'cerdo': cerdo
+    }
+    return render_template('view/enfer_trata/listado_tratamientos.html', data = data)

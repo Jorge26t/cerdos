@@ -555,3 +555,332 @@ class Compras():
             error = "Ocurrio un problema: " + str(e)
             return error
         return 0
+
+    # modelo para registrar el tipo de medicamento
+    def Registrar_tipo_medicamento(_valor):
+        try:
+            query = mysql.connection.cursor()
+            query.execute('SELECT * FROM tipo_medicamento WHERE tipo = "{0}"'. format(_valor))
+            data = query.fetchone()
+            if not data:
+                query.execute('INSERT INTO tipo_medicamento (tipo) VALUES ("{0}")'.format(_valor))
+                query.connection.commit()
+                query.close()
+                return 1  # se inserto correcto
+            else:
+                query.close()
+                return 2
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+    
+    # modelo para listar el tipo medicamento
+    def Listar_tipo_medicamento():
+        try:
+            query = mysql.connection.cursor()
+            query.execute('SELECT * FROM tipo_medicamento')
+            data = query.fetchall()
+            query.close()
+            new_lista = []
+            for datos in data:
+                dic = {} 
+                dic["id"] = datos[0]
+                dic["tipo"] = datos[1] 
+                dic["estado"] = datos[2]       
+                new_lista.append(dic)
+            return {"data": new_lista}
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+
+    # modelo para cambiar el estado del medicamento
+    def Estado_tipo_medicamento(_id,_dato):
+        try:
+            query = mysql.connection.cursor()
+            query.execute('UPDATE tipo_medicamento SET estado = "{0}" WHERE id = "{1}"'.format(_dato, _id))
+            query.connection.commit()
+            query.close()
+            return 1  # se inserto correcto
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+    
+    # modelo para editar el tipo de medicamento
+    def Editar_tipo_medicamento(_id,_dato):
+        try:
+            query = mysql.connection.cursor()
+            query.execute('SELECT * FROM tipo_medicamento WHERE tipo = "{0}" AND id != "{1}"'. format(_dato,_id))
+            data = query.fetchone()
+            if not data:
+                query.execute('UPDATE tipo_medicamento SET tipo = "{0}" WHERE id = "{1}"'.format(_dato,_id))
+                query.connection.commit()
+                query.close()
+                return 1  # se inserto correcto
+            else:
+                query.close()
+                return 2
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+    
+    # modelo para combo del tipo de medicamento
+    def Combo_tipo_medicamento():
+        try:
+            query = mysql.connection.cursor()
+            query.execute('SELECT * FROM tipo_medicamento WHERE estado = 1')
+            data = query.fetchall()
+            query.close() 
+            return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+    
+    # modelo para registrar el medicamento
+    def Crear_medicamento(_codigo, _nombre, _tipo, _cantidad, _precio, _detalle, archivo):
+        try:
+            query = mysql.connection.cursor()
+            query.execute('SELECT * FROM medicamento WHERE codigo = "{0}"'. format(_codigo))
+            data = query.fetchone()
+            if not data:
+                query.execute('INSERT INTO medicamento (codigo,nombre,tipo_id,cantidad,precio,detalle,foto) VALUES ("{0}","{1}","{2}","{3}","{4}","{5}","{6}")'.format(_codigo,_nombre,_tipo,_cantidad,_precio,_detalle,archivo))
+                query.connection.commit()
+                query.close()
+                return 1  # se inserto correcto
+            else:
+                query.close()
+                return 2
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+    
+    # modelo para listar el medicamento
+    def Listar_medicamento():
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                            medicamento.id,
+                            medicamento.codigo,
+                            medicamento.nombre,
+                            medicamento.tipo_id,
+                            tipo_medicamento.tipo,
+                            medicamento.cantidad,
+                            medicamento.precio,
+                            medicamento.detalle,
+                            medicamento.foto,
+                            medicamento.estado 
+                        FROM
+                            medicamento
+                            INNER JOIN tipo_medicamento ON medicamento.tipo_id = tipo_medicamento.id""")
+            data = query.fetchall()
+            query.close()
+            new_lista = []
+            for datos in data:
+                dic = {} 
+                dic["id"] = datos[0]
+                dic["codigo"] = datos[1]
+                dic["nombre"] = datos[2] 
+                dic["tipo_id"] = datos[3]
+                dic["tipo"] = datos[4]
+                dic["cantidad"] = datos[5] 
+                dic["precio"] = datos[6]
+                dic["detalle"] = datos[7]
+                dic["foto"] = datos[8] 
+                dic["estado"] = datos[9]       
+                new_lista.append(dic)
+            return {"data": new_lista}
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+
+    # modelo para cambiar el estado del medicamento
+    def Estado_medicamento(_id,_dato):
+        try:
+            query = mysql.connection.cursor()
+            query.execute('UPDATE medicamento SET estado = "{0}" WHERE id = "{1}"'.format(_dato, _id))
+            query.connection.commit()
+            query.close()
+            return 1  # se inserto correcto
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+    
+    # modelo para editar el medicamento
+    def Editar_medicamento(_codigo, _nombre, _tipo, _cantidad, _precio, _detalle, id):
+        try:
+            query = mysql.connection.cursor()
+            query.execute('SELECT * FROM medicamento WHERE codigo="{0}" AND id!="{1}"'. format(_codigo,id))
+            data = query.fetchone()
+            if not data:
+                query.execute('UPDATE medicamento SET codigo="{0}",nombre="{1}",tipo_id="{2}",cantidad="{3}",precio="{4}",detalle="{5}"WHERE id = "{6}"'.format(_codigo,_nombre,_tipo,_cantidad,_precio,_detalle,id))
+                query.connection.commit()
+                query.close()
+                return 1  # se inserto correcto
+            else:
+                query.close()
+                return 2
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+    
+    # modelo para listar el insumo en la tabla de compra
+    def Table_medicamento():
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                            medicamento.id,
+                            medicamento.codigo,
+                            medicamento.nombre,
+                            medicamento.tipo_id,
+                            tipo_medicamento.tipo,
+                            medicamento.cantidad,
+                            medicamento.precio,
+                            medicamento.detalle,
+                            medicamento.foto,
+                            medicamento.estado 
+                            FROM
+                            medicamento
+                            INNER JOIN tipo_medicamento ON medicamento.tipo_id = tipo_medicamento.id WHERE medicamento.estado = 1""")
+            data = query.fetchall()
+            query.close() 
+            return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+    
+    # modelo para registrar la compra del medicamento
+    def Registrar_compra_medicamentoo(_id_pro, _fecha_c, _numero_compra, _tipo_comprobante, _iva, _subtotal, _impuesto_sub, _total_pagar, _id):
+        try:
+            query = mysql.connection.cursor()
+            query.execute('SELECT * FROM compra_medicamento WHERE numero_compra = "{0}"'. format(_numero_compra))
+            data = query.fetchone()
+            if not data:
+                query.execute('INSERT INTO compra_medicamento (usuario_id,proveedor_id,fecha,numero_compra,documento,iva,subtotal,impuesto,total) VALUES ("{0}","{1}","{2}","{3}","{4}","{5}","{6}","{7}","{8}")'.format(_id,_id_pro,_fecha_c,_numero_compra,_tipo_comprobante,_iva,_subtotal,_impuesto_sub,_total_pagar))
+                query.connection.commit()
+                # me devuelve el ultimo id insertado
+                id = query.lastrowid
+                query.close()
+                return id  # se inserto correcto
+            else:
+                query.close()
+                return 2
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+    
+    # modelo para registra el detalle de compra del medicamento
+    def Registrar_detalle_compra_medicamento(_id, ida, precio, cantidad, descuento, total):
+        try:
+            query = mysql.connection.cursor()         
+            query.execute('INSERT INTO detalle_compra_medicamento (compra_medicamento_id,medicamento_id,precio,cantidad,descuento,total) VALUES ("{0}","{1}","{2}","{3}","{4}","{5}")'.format(_id,ida,precio,cantidad,descuento,total))
+            query.connection.commit()
+
+            query.execute('UPDATE medicamento SET cantidad = cantidad + "{0}" WHERE id = "{1}" '.format(cantidad,ida))
+            query.connection.commit()
+
+            query.close()
+            return 1  # se inserto correcto
+
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+    
+    # modelo para listar las compras de medicamento
+    def Listar_compras_medicamento():
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                            compra_medicamento.id,
+                            CONCAT_WS( ' ', usuario.nombres, usuario.apellidos ) AS usuario,
+                            CONCAT_WS( ' ', proveedor.razon, ' - ', proveedor.ruc ) AS proveedor,
+                            compra_medicamento.fecha,
+                            compra_medicamento.numero_compra,
+                            compra_medicamento.documento,
+                            compra_medicamento.iva,
+                            compra_medicamento.subtotal,
+                            compra_medicamento.impuesto,
+                            compra_medicamento.total,
+                            compra_medicamento.estado 
+                        FROM
+                            compra_medicamento
+                            INNER JOIN usuario ON compra_medicamento.usuario_id = usuario.usuario_id
+                            INNER JOIN proveedor ON compra_medicamento.proveedor_id = proveedor.id 
+                        ORDER BY
+                            compra_medicamento.id DESC""")
+            data = query.fetchall()
+            query.close() 
+            return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+
+    # modelo para anular la compra de medicamento
+    def Compra_medicamento_anular(_id):
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                        detalle_compra_medicamento.medicamento_id,
+                        detalle_compra_medicamento.cantidad 
+                        FROM
+                        detalle_compra_medicamento 
+                        WHERE
+                        detalle_compra_medicamento.compra_medicamento_id = '{0}'""".format(_id))
+            data = query.fetchall()
+            
+            for dato in data: 
+                print(dato)
+                query.execute('UPDATE medicamento SET cantidad = cantidad - {0} WHERE id = "{1}"'.format(dato[1], str(dato[0])))
+                query.connection.commit()
+
+            query.execute('UPDATE compra_medicamento SET estado = 0 WHERE id = {0}'.format(_id))
+            query.connection.commit()
+
+            query.execute('UPDATE detalle_compra_medicamento SET estado = 0 WHERE compra_medicamento_id = "{0}"'.format(_id))
+            query.connection.commit()
+            query.close() 
+            return 1
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+
+    # modelo para cambiar la foto del medicamento
+    def Cambiar_foto_medicamento(_id,archivo):
+        try:
+            query = mysql.connection.cursor()
+            query.execute('UPDATE medicamento SET foto = "{0}" WHERE id = "{1}"'.format(archivo, _id))
+            query.connection.commit()
+            query.close()
+            return 1  # se inserto correcto
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+    

@@ -235,4 +235,117 @@ class Reportes():
             error = "Ocurrio un problema: " + str(e)
             return error
         return 0
+    
+    ######################### COMPRAS MEDICINAS
+
+    #modelo para listar la compra del medicamento
+    def Listar_compra_medicinas(id):
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                            compra_medicamento.id,
+                            CONCAT_WS( ' ', usuario.nombres, usuario.apellidos ) AS usuario,
+                            CONCAT_WS( ' ', proveedor.razon) AS proveedor,
+                            proveedor.ruc,
+                            compra_medicamento.fecha,
+                            compra_medicamento.numero_compra,
+                            compra_medicamento.documento,
+                            compra_medicamento.iva,
+                            compra_medicamento.subtotal,
+                            compra_medicamento.impuesto,
+                            compra_medicamento.total,
+                            compra_medicamento.estado 
+                        FROM
+                            compra_medicamento
+                            INNER JOIN usuario ON compra_medicamento.usuario_id = usuario.usuario_id
+                            INNER JOIN proveedor ON compra_medicamento.proveedor_id = proveedor.id WHERE compra_medicamento.id='{0}'""". format(id))
+            data = query.fetchone()
+            query.close()
+            return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+      
+    #modelo para traer el detalle de la compra
+    def Detalle_compra_medicamneto(id):
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                            detalle_compra_medicamento.compra_medicamento_id,
+                            medicamento.codigo,
+                            medicamento.nombre,
+                            detalle_compra_medicamento.precio,
+                            detalle_compra_medicamento.cantidad,
+                            detalle_compra_medicamento.descuento,
+                            detalle_compra_medicamento.total,
+                            detalle_compra_medicamento.estado 
+                        FROM
+                            detalle_compra_medicamento
+                            INNER JOIN medicamento ON detalle_compra_medicamento.medicamento_id = medicamento.id 
+                        WHERE
+                            detalle_compra_medicamento.compra_medicamento_id = '{0}'""".format(id))
+            data = query.fetchall()
+            query.close()
+            return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
  
+    ######################### TRATAMIENDOS HISTORIA
+
+    # modelo para listado de trataiendos de los cerdos
+    def tratamiendo_cerdo(id):
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                        tratamiento_cerdos.id,
+                        tratamiento_cerdos.enfer_cerdo_id,
+                        CONCAT_WS( ' ', 'Código: ', cerdo.codigo, '- Sexo: ', cerdo.sexo, '- Raza: ', raza.raza ) AS cerdo,
+                        CONCAT_WS( ' ', veterinario.nombre, veterinario.apellido ) AS veterinario,
+                        tratamiento_cerdos.peso,
+                        tratamiento_cerdos.fecha_i,
+                        tratamiento_cerdos.fecha_f,
+                        tratamiento_cerdos.observacion,
+                        enfermedad_cerdo.fecha,
+                        enfermedad_cerdo.sintomas,
+                        enfermedad_cerdo.diagnostico 
+                    FROM
+                        tratamiento_cerdos
+                        INNER JOIN enfermedad_cerdo ON tratamiento_cerdos.enfer_cerdo_id = enfermedad_cerdo.id
+                        INNER JOIN veterinario ON enfermedad_cerdo.veterinario_id = veterinario.id
+                        INNER JOIN cerdo ON enfermedad_cerdo.cerdo_id = cerdo.id_cerdo
+                        INNER JOIN raza ON cerdo.raza = raza.id_raza 
+                    WHERE
+                        tratamiento_cerdos.id = '{0}'""".format(id))
+            data = query.fetchone()
+            query.close() 
+            return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+
+    def Detalle_enfermedad(idd):
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                        detalle_enfermedad_cerdo.cerdo_enfermedad_id,
+                        enfermedad.nombre 
+                        FROM
+                            detalle_enfermedad_cerdo
+                            INNER JOIN enfermedad ON detalle_enfermedad_cerdo.enfermedad_id = enfermedad.id 
+                        WHERE
+                            detalle_enfermedad_cerdo.cerdo_enfermedad_id = '{0}'""".format(idd))
+            data = query.fetchall()
+            query.close() 
+            return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0

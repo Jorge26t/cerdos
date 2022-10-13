@@ -3,14 +3,14 @@
       <div class="row mb-2">
         <div class="col-sm-6">
           <h1 class="m-0">
-            <i class="fa fa-list"></i> Insumos
+            <i class="fa fa-list"></i> Medicamentos
           </h1>
         </div>
   
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="/Admin">Inicio</a></li>
-            <li class="breadcrumb-item active">Insumos</li>
+            <li class="breadcrumb-item active">Medicamentos</li>
           </ol>
         </div>
       </div>
@@ -23,7 +23,7 @@
             <div class="col-lg-12 col-12">
                 <div class="card card-dark">
                   <div class="card-header">
-                    <h3 id="unir_texto" class="card-title"> Insumos para los cerdos</h3>
+                    <h3 id="unir_texto" class="card-title"> Medicamentos para los cerdos</h3>
                   </div>
       
                   <div class="card-body">
@@ -33,10 +33,10 @@
  
                         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                             <li class="nav-item">
-                              <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Lista de insumos</a>
+                              <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Lista de medicamentos</a>
                             </li>
                             <li class="nav-item">
-                              <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Registro de insumos</a>
+                              <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Registro de medicamentos</a>
                             </li> 
                         </ul>
                         
@@ -46,7 +46,7 @@
 
                                 <div class="card card-info">
                                     <div class="card-header">
-                                      <h3 id="unir_texto" class="card-title"> Listado de insumos</h3>
+                                      <h3 id="unir_texto" class="card-title"> Listado de medicamentos</h3>
                                     </div>
                         
                                     <div class="card-body">
@@ -55,7 +55,7 @@
                                         <div class="form-group col-lg-12 col-12">
                   
                                           <table
-                                          id="tabla_insumo"
+                                          id="tabla_medicamento"
                                           class="table table-display table-hover responsive nowrap text-center"
                                           style="width: 100%" >
                                           <thead>
@@ -101,7 +101,7 @@
 
                               <div class="card card-success">
                                 <div class="card-header">
-                                  <h3 id="unir_texto" class="card-title"> Registro de insumos</h3>
+                                  <h3 id="unir_texto" class="card-title"> Registro de medicamentos</h3>
                                 </div>
                     
                                 <div class="card-body">
@@ -109,24 +109,23 @@
                                   <div class="row">
 
                                     <div class="form-group col-lg-3 col-6">
-                                        <label for="codigo_alimento">Código del insumo</label>
-                                        <input type="text" maxlength="20" class="form-control" id="codigo_alimento"
-                                            value="{{codigo}}" placeholder="Ingrese codigo del alimento"
+                                        <label for="codigo_medicamento">Código del medicamento</label>
+                                        <input type="text" maxlength="20" class="form-control" id="codigo_medicamento"
+                                            value="{{codigo}}" placeholder="Ingrese codigo del medicamento"
                                             onkeypress="return soloNumeros(event)" />
                                         <span style="color: red" id="codigo_oblig"></span>
                                     </div>
     
                                     <div class="form-group col-lg-7 col-6">
-                                        <label for="nombre">Nombre del insumo</label>
-                                        <input type="text" maxlength="70" class="form-control" id="nombre"
-                                            placeholder="Ingrese nombre" />
+                                        <label for="nombre">Nombre del medicamento</label>
+                                        <input type="text" maxlength="70" class="form-control" id="nombre" placeholder="Ingrese medicamento" />
                                         <span style="color: red" id="nombre_obligg"></span>
                                     </div>
     
                                     <div class="form-group col-lg-6 col-6">
-                                          <label for="tipo_id">Tipo de insumo</label>
+                                          <label for="tipo_id">Tipo de medicamento</label>
                                           <select class="form-control tipo_id" style="width: 100%" id="tipo_id">
-                                              <option value="0">--- Seleccione el tipo insumo ---</option>
+                                              <option value="0">--- Seleccione el tipo medicamento ---</option>
       
                                               {% for datas in tipo %}
                                               <option value="{{datas[0]}}">{{datas[1]}}</option>
@@ -148,15 +147,15 @@
                                     </div>
                                             
                                     <div class="form-group col-lg-12 col-6">
-                                        <label for="detalle_a">Detalle del insumo</label>
-                                        <textarea class="form-control" id="detalle_a" cols="10" rows="3"> </textarea>
+                                        <label for="detalle_m">Detalle del medicamento</label>
+                                        <textarea class="form-control" id="detalle_m" cols="10" rows="3"> </textarea>
                                         <span style="color: red" id="detalle_obligg"></span>
                                     </div>
 
                                     <div class="col-md-6 mb-3 mx-auto text-center">
-                                          <label for="password_c">Foto del insumo</label>      
+                                          <label for="password_c">Foto del medicamento</label>      
                                           <img id="img_producto" height="197" width="200"
-                                              class="border rounded mx-auto d-block img-fluid" src="static/uploads/insumo/insumo.jpg" />
+                                              class="border rounded mx-auto d-block img-fluid" src="static/uploads/medicamento/medicamento.jpg" />
                                           <input type="file" class="form-control" id="foto" onchange="mostrar_imagen(this)" />
                                     </div>
 
@@ -164,11 +163,11 @@
                                 </div> 
 
                                 <div class="card-footer">
-                                  <button onclick="registrar_insumo();" class="btn btn-success">
+                                  <button onclick="registrar_medicamentos();" class="btn btn-success">
                                       <i class="fa fa-save"></i> Guadar
                                   </button>
                                   -
-                                  <button onclick="cargar_contenido('contenido_principal','/insumo');"
+                                  <button onclick="cargar_contenido('contenido_principal','/medicamentos');"
                                       class="btn btn-danger">
                                       <i class="fa fa-svae"></i> Volver
                                   </button>
@@ -186,7 +185,7 @@
     </section>
 </div>
   
-<div class="modal fade" id="modal_editar_foto_insumo">
+<div class="modal fade" id="modal_editar_foto_medicamento">
     <div class="modal-dialog">
         <div class="modal-content bg-warning">
             <div class="modal-header">
@@ -201,7 +200,7 @@
 
                 <div class="row">
                     <div class="col-md-12 mb-3 mx-auto text-center">
-                        <label>Foto del insumo</label>
+                        <label>Foto del medicamento</label>
 
                         <img id="img_cerdo" height="200" width="300" class="border rounded mx-auto d-block img-fluid" />
 
@@ -213,7 +212,7 @@
                 <button type="button" class="btn btn-danger" data-dismiss="modal">
                     Cerrar
                 </button>
-                <button onclick="editar_foto_insumo();" class="btn btn-success">
+                <button onclick="editar_foto_medicamento();" class="btn btn-success">
                     <i class="fa fa-edit"></i> Guardar
                 </button>
             </div>
@@ -223,37 +222,37 @@
     <!-- /.modal-dialog -->
 </div>
 
-<div class="modal fade" id="modal_editar_insumo">
+<div class="modal fade" id="modal_editar_medicamento">
   <div class="modal-dialog modal-lg">
       <div class="modal-content bg-primary">
           <div class="modal-header">
-              <h4 class="modal-title">Editar insumo</h4>
+              <h4 class="modal-title">Editar medicamento</h4>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
               </button>
           </div>
           <div class="modal-body" style="background: white; color: black">
-              <input type="text" id="id_insumo_edit" hidden />
+              <input type="text" id="id_medicamento_edit" hidden />
 
               <div class="row">
 
                 <div class="form-group col-lg-3 col-6">
-                    <label for="codigo_insumo_edit">Código del insumo</label>
-                    <input type="text" maxlength="20" class="form-control" id="codigo_insumo_edit"  placeholder="Ingrese codigo del insumo" onkeypress="return soloNumeros(event)" />
+                    <label for="codigo_medicamento_edit">Código del medicamento</label>
+                    <input type="text" maxlength="20" class="form-control" id="codigo_medicamento_edit"  placeholder="Ingrese codigo del medicamento" onkeypress="return soloNumeros(event)" />
                     <span style="color: red" id="codigo_oblig_edi"></span>
                 </div>
 
                 <div class="form-group col-lg-7 col-6">
-                    <label for="nombre_edit">Nombre del insumo</label>
+                    <label for="nombre_edit">Nombre del medicamento</label>
                     <input type="text" maxlength="70" class="form-control" id="nombre_edit"
                         placeholder="Ingrese nombre" />
                     <span style="color: red" id="nombre_obligg_edi"></span>
                 </div>
 
                 <div class="form-group col-lg-6 col-6">
-                      <label for="tipo_id_edit">Tipo de insumo</label>
+                      <label for="tipo_id_edit">Tipo de medicamento</label>
                       <select class="form-control tipo_id_edit" style="width: 100%" id="tipo_id_edit">
-                          <option value="0">--- Seleccione el tipo insumo ---</option>
+                          <option value="0">--- Seleccione el tipo medicamento ---</option>
 
                           {% for datas in tipo %}
                           <option value="{{datas[0]}}">{{datas[1]}}</option>
@@ -275,8 +274,8 @@
                 </div> 
 
                 <div class="form-group col-lg-12 col-6">
-                    <label for="detalle_a_edit">Detalle del insumo</label>
-                    <textarea class="form-control" id="detalle_a_edit" cols="10" rows="3"> </textarea>
+                    <label for="detalle_m_edit">Detalle del medicamento</label>
+                    <textarea class="form-control" id="detalle_m_edit" cols="10" rows="3"> </textarea>
                     <span style="color: red" id="detalle_obligg_edi"></span>
                 </div>
 
@@ -288,7 +287,7 @@
               <button type="button" class="btn btn-danger" data-dismiss="modal">
                   Cerrar
               </button>
-              <button onclick="editar_insumo();" class="btn btn-success">
+              <button onclick="editar_medicamento();" class="btn btn-success">
                   <i class="fa fa-edit"></i> Guardar
               </button>
           </div>
@@ -300,7 +299,7 @@
 <script src="static/js/compras.js"></script>
 
 <script>  
-listar_insumos();
+listar_medicamento();
 
 $(".tipo_id").select2();
 $(".tipo_id_edit").select2();
@@ -328,7 +327,7 @@ function mostrar_imagen(input) {
             "warning"
         );
         $("#img_producto")
-            .attr("src", "static/uploads/insumo/insumo.jpg")
+            .attr("src", "static/uploads/medicamento/medicamento.jpg")
             .width(200)
             .height(197);
         return (document.getElementById("foto").value = "");

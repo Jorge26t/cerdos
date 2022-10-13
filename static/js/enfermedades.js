@@ -1356,3 +1356,792 @@ function validar_editar_tipo_tramiento(
 
 }
 
+/////////// compras de alimentos para cerdos
+function registra_enfermedad(){
+  Swal.fire({
+    title: 'Guardar los datos?',
+    text: "La información se guardará en el sistema!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Si, guardar!'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      guardar_enfermedad_cerdo();
+    }
+  })
+}
+
+function guardar_enfermedad_cerdo(){
+  var cerdo_id = $("#cerdo_id").val(); 
+  var fecha = $("#fecha_r").val(); 
+  var sintomas = $("#sintomas").val(); 
+  var diagnostico = $("#diagnostico").val(); 
+  var veterinario = $("#veterinario_id").val(); 
+  var count = 0;
+
+  if(cerdo_id == "0" || 
+    fecha.length == 0 || 
+    fecha.trim() == "" ||
+    sintomas.length == 0 || 
+    sintomas.trim() == "" ||
+    diagnostico.length == 0 || 
+    diagnostico.trim() == "" ||
+    veterinario == "0")
+    {
+    validar_registro_cerdos_enfermos(cerdo_id,fecha,sintomas,diagnostico,veterinario);
+    return swal.fire(
+      "Campo vacios",
+      "Los campos no deben quedar vacios, complete los datos",
+      "warning"
+    );
+  }else{  
+    $("#cerdo_obligg").html(""); 
+    $("#fecha_obligg").html(""); 
+    $("#sintomas_oblig").html(""); 
+    $("#diagnostico_oblig").html(""); 
+    $("#veterinario_obligg").html("");
+  }
+
+  $("#tabla_enfermedad tbody#tbody_tabla_enfermedad tr").each(function () {
+      count++;
+    }
+  );
+
+  if(count == 0){ 
+    $("#unir_no_hay").html('<span class="badge badge-danger"><b>.:No hay enfermedades en la tabla:.</b></span>');
+    return swal.fire(
+      "Detalle vacío",
+      "No hay enfermedades en la tabla",
+      "warning"
+    );
+  }else{
+    $("#unir_no_hay").html("");
+  }
+
+  var formdata = new FormData();
+  formdata.append("cerdo_id", cerdo_id);
+  formdata.append("fecha", fecha);
+  formdata.append("sintomas", sintomas);
+  formdata.append("diagnostico", diagnostico);
+  formdata.append("veterinario", veterinario); 
+
+  $.ajax({
+    url: "/enfermedad/guardar_enfermedad_cerdo",
+    type: "POST",
+    //aqui envio toda la formdata
+    data: formdata,
+    contentType: false,
+    processData: false,
+    success: function (resp) {
+
+      if (resp > 0) { 
+
+        guardar_detalle_enfermedad_cerdo(parseInt(resp));
+
+      } else {
+
+        $(".card-success").LoadingOverlay("hide");
+        return Swal.fire(
+          "Error",
+          "No se pudo registrar la enfermedad, falla en la matrix",
+          "error"
+        );
+
+      }
+    },
+
+    beforeSend: function () {
+      $(".card-success").LoadingOverlay("show", {
+        text: "Cargando...",
+      });
+    },
+  });
+  return false;
+}
+
+function validar_registro_cerdos_enfermos(cerdo_id,fecha,sintomas,diagnostico,veterinario)
+{
+  if (cerdo_id == "0") {
+    $("#cerdo_obligg").html("Seleccione el cerdo");
+  } else {
+    $("#cerdo_obligg").html("");
+  }
+
+  if (fecha.length == 0 || fecha.trim() == "") {
+    $("#fecha_obligg").html("Ingrese la fecha");
+  } else {
+    $("#fecha_obligg").html("");
+  }
+
+  if (sintomas.length == 0 || sintomas.trim() == "") {
+    $("#sintomas_oblig").html("Ingrese los sintomas");
+  } else {
+    $("#sintomas_oblig").html("");
+  }
+
+  if (diagnostico.length == 0 || diagnostico.trim() == "") {
+    $("#diagnostico_oblig").html("Ingrese el diagnóstico");
+  } else {
+    $("#diagnostico_oblig").html("");
+  }
+
+  if (veterinario == "0") {
+    $("#veterinario_obligg").html("Seleccione el veterinario");
+  } else {
+    $("#veterinario_obligg").html("");
+  }
+}
+
+function guardar_detalle_enfermedad_cerdo(id){
+  var count = 0;
+  var arrego_id = new Array(); 
+
+  $("#tabla_enfermedad tbody#tbody_tabla_enfermedad tr").each(
+    function () {
+      arrego_id.push($(this).find("td").eq(0).text()); 
+      count++;
+    }
+  );
+
+  //aqui combierto el arreglo a un string
+  var ida = arrego_id.toString(); 
+
+  if (count == 0) {
+    return false;
+  }
+
+  $.ajax({
+    url: "/enfermedad/guardar_detalle_enfermedad_cerdo",
+    type: "POST",
+    data: { 
+      id: id,
+      ida: ida
+    },
+  }).done(function (resp) {
+    if (resp > 0) {
+      if (resp == 1) {
+        
+        $(".card-success").LoadingOverlay("hide");
+        cargar_contenido('contenido_principal','/registro_enfermos');
+        return Swal.fire(
+          "Registro guardado",
+          "El registro se guardo con exito",
+          "success"
+        );
+
+      }
+    } else {
+
+      $(".card-success").LoadingOverlay("hide");
+      return Swal.fire(
+        "Error",
+        "No se pudo crear el detalle de enfermedad, falla en la matrix",
+        "error"
+      );
+
+    }
+  });
+}
+
+function modal_enfermedad_detalle(id){
+  $.ajax({
+    url: "/enfermedad/modal_enfermedad_detalle",
+    type: "POST", 
+    data: {id: id}, 
+    success: function (resp) {
+      $('#tbody_enfermedad').empty();
+      $(".card-info").LoadingOverlay("hide");
+      if(resp != 0){
+
+          let count = 0; 
+          var llenat = ""; 
+            resp['data'].forEach((row) => {  
+            count++;   
+            llenat += `<tr>
+                        <td> ${count}  </td>
+                        <td><a title="eliminar enfermedad del cerdo" onclick="eliminar_detalle_enfermedad_cerdo(${row["id"]})" class="btn btn-outline-danger"><i class="fa fa-trash"></i></a> </td>            
+                        <td> ${row["nombre"]} </td>   
+                      </tr>`;           
+            $("#tbody_enfermedad").html(llenat);           
+          }); 
+
+          $("#modal_enfermedades_cerdo").modal({ backdrop: "static", keyboard: false });
+          $("#modal_enfermedades_cerdo").modal("show");
+
+      }else{
+        $('#tbody_enfermedad').empty();
+        return Swal.fire(
+          "No hay enfermedad",
+          "El cerdo no tiene detalle de enfermedades",
+          "error"
+        );
+      }
+
+    },
+ 
+    beforeSend: function () {
+        $(".card-info").LoadingOverlay("show", {
+          text: "Cargando..."});
+    },
+  });
+}
+
+/// para lo cerdos tratados
+function modal_enfermedad_detalle_tratado(id){
+  $.ajax({
+    url: "/enfermedad/modal_enfermedad_detalle",
+    type: "POST", 
+    data: {id: id}, 
+    success: function (resp) {
+      $('#tbody_enfermedad').empty();
+      $(".card-info").LoadingOverlay("hide");
+      if(resp != 0){
+
+          let count = 0; 
+          var llenat = ""; 
+            resp['data'].forEach((row) => {  
+            count++;   
+            llenat += `<tr>
+                        <td> ${count}  </td>
+                        <td> ${row["nombre"]} </td>   
+                      </tr>`;           
+            $("#tbody_enfermedad").html(llenat);           
+          }); 
+
+          $("#modal_enfermedades_cerdo").modal({ backdrop: "static", keyboard: false });
+          $("#modal_enfermedades_cerdo").modal("show");
+
+      }else{
+        $('#tbody_enfermedad').empty();
+        return Swal.fire(
+          "No hay enfermedad",
+          "El cerdo no tiene detalle de enfermedades",
+          "error"
+        );
+      }
+
+    },
+ 
+    beforeSend: function () {
+        $(".card-info").LoadingOverlay("show", {
+          text: "Cargando..."});
+    },
+  });
+}
+
+function eliminar_cerdo_espera(id){
+  Swal.fire({
+    title: 'Eliminar dato?',
+    text: "El registro se eliminará!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Si, eliminar!'
+  }).then((result) => {
+    if (result.isConfirmed) {
+  
+      $.ajax({
+        url: "/enfermedad/eliminar_cerdo_espera",
+        type: "POST", 
+        data: {id: id}, 
+        success: function (resp) {  
+          if(resp == 1){
+            $(".card-info").LoadingOverlay("hide");
+            cargar_contenido('contenido_principal','/cerdos_enfermos_espera');
+            return Swal.fire(
+              "Enfermedad eliminada",
+              "La enfermedad se elimino con exito",
+              "success"
+            );
+          }else{
+            $(".card-info").LoadingOverlay("hide");
+            return Swal.fire(
+              "Error",
+              "No se pudo eliminar la enfermedad, falla en la matrix",
+              "error"
+            );
+          }
+    
+        },
+     
+        beforeSend: function () {
+            $(".card-info").LoadingOverlay("show", {
+              text: "Cargando..."});
+        },
+      });
+      
+    }
+  })
+}
+
+function eliminar_detalle_enfermedad_cerdo(id){
+  Swal.fire({
+    title: 'Eliminar enfermedad?',
+    text: "La enfermedad del cerdo se eliminará!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Si, eliminar!'
+  }).then((result) => {
+    if (result.isConfirmed) {
+  
+      $.ajax({
+        url: "/enfermedad/eliminar_detalle_enfermedad_cerdo",
+        type: "POST", 
+        data: {id: id}, 
+        success: function (resp) {  
+          if(resp == 1){
+
+            $(".bg-primary").LoadingOverlay("hide");
+            $("#modal_enfermedades_cerdo").modal("hide");
+            return Swal.fire(
+              "Enfermedad eliminada",
+              "La enfermedad se elimino del detalle con exito",
+              "success"
+            );
+
+          }else{
+            
+            $(".bg-primary").LoadingOverlay("hide");
+            return Swal.fire(
+              "Error",
+              "No se pudo eliminar la enfermedad del detalle, falla en la matrix",
+              "error"
+            );
+          }
+    
+        },
+     
+        beforeSend: function () {
+            $(".bg-primary").LoadingOverlay("show", {
+              text: "Cargando..."});
+        },
+      });
+      
+    }
+  })
+}
+
+/////////// registrar_tratamiento
+function registra_tratamientos_cerdoos(){
+  Swal.fire({
+    title: 'Guardar los datos?',
+    text: "La información se guardará en el sistema!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Si, guardar!'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      guardar_tratamientos_cerdoos();
+    }
+  })
+}
+
+function guardar_tratamientos_cerdoos(){
+  var cerdo_id = $("#cerdo_id").val(); 
+  var peso = $("#peso_a").val(); 
+  var fecha_i = $("#fecha_i").val(); 
+  var fecha_f = $("#fecha_f").val(); 
+  var observacion = $("#observacion").val(); 
+  var count_insumo = 0;
+  var count_medicamento = 0;
+  var count_tratamiento = 0;
+
+  if(cerdo_id == "0" || 
+    fecha_i.length == 0 || 
+    fecha_i.trim() == "" || 
+    fecha_f.length == 0 || 
+    fecha_f.trim() == "" || 
+    observacion.length == 0 || 
+    observacion.trim() == "")
+    {
+    validar_registro_tratamientos_cerdos(cerdo_id,fecha_i,fecha_f,observacion);
+    return swal.fire(
+      "Campo vacios",
+      "Los campos no deben quedar vacios, complete los datos",
+      "warning"
+    );
+  }else{   
+    $("#cerdo_obligg").html(""); 
+    $("#fecha_i_obligg").html(""); 
+    $("#fecha_f_obligg").html(""); 
+    $("#observacion_oblig").html("");
+  }
+
+  // insumo
+  $("#tabla_insumo tbody#tbody_tabla_insumo tr").each(function () {
+      count_insumo++;
+    }
+  );
+
+  if(count_insumo == 0){ 
+    $("#unir_no_hay").html('<span style="font-size: 20px;" class="badge badge-danger"><b>.:No hay insumo en la tabla:.</b></span>');
+    return swal.fire(
+      "Detalle vacío",
+      "No hay insumo en la tabla",
+      "warning"
+    );
+  }else{
+    $("#unir_no_hay").html("");
+  }
+
+  // medicamento
+  $("#tabla_medicamento tbody#tbody_tabla_medicamento tr").each(function () {
+      count_medicamento++;
+    }
+  );
+
+  if(count_medicamento == 0){ 
+    $("#unir_no_hay").html('<span style="font-size: 20px;" class="badge badge-danger"><b>.:No hay medicamento en la tabla:.</b></span>');
+    return swal.fire(
+      "Detalle vacío",
+      "No hay medicamento en la tabla",
+      "warning"
+    );
+  }else{
+    $("#unir_no_hay").html("");
+  }
+
+  // tratamiento
+  $("#tabla_tratamiento tbody#tbody_tabla_tratamiento tr").each(function () {
+      count_tratamiento++;
+    }
+  );
+
+  if(count_tratamiento == 0){ 
+    $("#unir_no_hay").html('<span style="font-size: 20px;" class="badge badge-danger"><b>.:No hay tratamiento en la tabla:.</b></span>');
+    return swal.fire(
+      "Detalle vacío",
+      "No hay tratamiento en la tabla",
+      "warning"
+    );
+  }else{
+    $("#unir_no_hay").html("");
+  }
+
+  var formdata = new FormData();
+  formdata.append("cerdo_id", cerdo_id);
+  formdata.append("peso", peso);
+  formdata.append("fecha_i", fecha_i);
+  formdata.append("fecha_f", fecha_f);
+  formdata.append("observacion", observacion); 
+
+  $.ajax({
+    url: "/enfermedad/guardar_tratamiendo_cerdoos",
+    type: "POST",
+    //aqui envio toda la formdata
+    data: formdata,
+    contentType: false,
+    processData: false,
+    success: function (resp) {
+      if (resp > 0) { 
+
+        guardar_detalle_insumo_enfermedad(parseInt(resp));
+
+      } else {
+
+        $(".card-success").LoadingOverlay("hide");
+        return Swal.fire(
+          "Error",
+          "No se pudo registrar la enfermedad, falla en la matrix",
+          "error"
+        );
+
+      }
+    },
+
+    beforeSend: function () {
+      $(".card-success").LoadingOverlay("show", {
+        text: "Cargando...",
+      });
+    },
+  });
+  return false;
+}
+
+function validar_registro_tratamientos_cerdos(cerdo_id,fecha_i,fecha_f,observacion)
+{
+  if (cerdo_id == "0") {
+    $("#cerdo_obligg").html("Seleccione el cerdo");
+  } else {
+    $("#cerdo_obligg").html("");
+  }
+
+  if (fecha_i.length == 0 || fecha_i.trim() == "") {
+    $("#fecha_i_obligg").html("Ingrese la fecha inicio");
+  } else {
+    $("#fecha_i_obligg").html("");
+  }
+
+  if (fecha_f.length == 0 || fecha_f.trim() == "") {
+    $("#fecha_f_obligg").html("Ingrese la fecha fin");
+  } else {
+    $("#fecha_f_obligg").html("");
+  }
+
+  if (observacion.length == 0 || observacion.trim() == "") {
+    $("#observacion_oblig").html("Ingrese la observación");
+  } else {
+    $("#observacion_oblig").html("");
+  }
+
+  
+}
+
+function guardar_detalle_insumo_enfermedad(id){
+  var count = 0;
+  var arrego_id = new Array();
+  var arrego_cantidad = new Array(); 
+
+  $("#tabla_insumo tbody#tbody_tabla_insumo tr").each(
+    function () {
+      arrego_id.push($(this).find("td").eq(0).text()); 
+      arrego_cantidad.push($(this).find("td").eq(2).text()); 
+      count++;
+    }
+  );
+
+  //aqui combierto el arreglo a un string
+  var ida = arrego_id.toString(); 
+  var cantidad = arrego_cantidad.toString(); 
+
+  if (count == 0) {
+    return false;
+  }
+
+  $.ajax({
+    url: "/enfermedad/guardar_detalle_insumo_enfermedad",
+    type: "POST",
+    data: { 
+      id: id,
+      ida: ida,
+      cantidad: cantidad
+    },
+  }).done(function (resp) {
+    if (resp > 0) {
+      guardar_detalle_medicina_enfermedad(parseInt(id));
+    } else {
+      $(".card-success").LoadingOverlay("hide");
+      return Swal.fire(
+        "Error",
+        "No se pudo crear el detalle de insumo, falla en la matrix",
+        "error"
+      );
+
+    }
+  });
+}
+
+function guardar_detalle_medicina_enfermedad(id){
+  var count = 0;
+  var arrego_id = new Array();
+  var arrego_cantidad = new Array(); 
+
+  $("#tabla_medicamento tbody#tbody_tabla_medicamento tr").each(
+    function () {
+      arrego_id.push($(this).find("td").eq(0).text()); 
+      arrego_cantidad.push($(this).find("td").eq(2).text()); 
+      count++;
+    }
+  );
+
+  //aqui combierto el arreglo a un string
+  var ida = arrego_id.toString(); 
+  var cantidad = arrego_cantidad.toString(); 
+
+  if (count == 0) {
+    return false;
+  }
+
+  $.ajax({
+    url: "/enfermedad/guardar_detalle_medicina_enfermedad",
+    type: "POST",
+    data: { 
+      id: id,
+      ida: ida,
+      cantidad: cantidad
+    },
+  }).done(function (resp) {
+    if (resp > 0) {
+      guardar_detalle_tratamiento_enfermedad(parseInt(id)); 
+    } else {
+      $(".card-success").LoadingOverlay("hide");
+      return Swal.fire(
+        "Error",
+        "No se pudo crear el detalle de tratamiento, falla en la matrix",
+        "error"
+      );
+
+    }
+
+  });
+}
+
+function guardar_detalle_tratamiento_enfermedad(id){
+  var count = 0;
+  var arrego_id = new Array(); 
+
+  $("#tabla_tratamiento tbody#tbody_tabla_tratamiento tr").each(
+    function () {
+      arrego_id.push($(this).find("td").eq(0).text());  
+      count++;
+    }
+  );
+
+  //aqui combierto el arreglo a un string
+  var ida = arrego_id.toString();  
+
+  if (count == 0) {
+    return false;
+  }
+
+  $.ajax({
+    url: "/enfermedad/guardar_detalle_tratamiento_enfermedad",
+    type: "POST",
+    data: { 
+      id: id,
+      ida: ida, 
+    },
+  }).done(function (resp) {
+    if (resp > 0) {
+      if (resp == 1) {
+        $(".card-success").LoadingOverlay("hide");
+        cargar_contenido('contenido_principal','/tratar_cerdos');
+        return Swal.fire(
+          "Registro guardado",
+          "El registro se guardo con exito",
+          "success"
+        );
+      }
+    } else {
+      $(".card-success").LoadingOverlay("hide");
+      return Swal.fire(
+        "Error",
+        "No se pudo crear el detalle de tratamiento, falla en la matrix",
+        "error"
+      );
+    }
+  });
+}
+
+/// detalle del tratamiendo del cerdo
+function ver_detalle_tratamiendo_cerdo(id, id_enfer){
+
+  $("#sintomas").val("");
+  $("#diagnostico").val("");
+  $("#fecha_r").val("");
+
+  $.ajax({
+    url: "/enfermedad/ver_detalle_tratamiendo_cerdo",
+    type: "POST", 
+    data: {id: id, id_enfer: id_enfer}, 
+    success: function (resp) {
+
+      $('#tbody_enfermedad').empty();
+
+      $("#sintomas").val(resp['cabeza'][1]);
+      $("#diagnostico").val(resp['cabeza'][2]);
+      $("#fecha_r").val(resp['cabeza'][0]);
+
+      let count = 0; 
+      var llenat = ""; 
+      resp['detalle'].forEach((row) => { 
+      count++;   
+      llenat += `<tr>
+                  <td> ${count}  </td>
+                  <td> ${row[1]} </td>   
+                </tr>`;           
+        $("#tbody_enfermedad").html(llenat);           
+      }); 
+
+      traer_insumo_enfermedad_detalle(id);
+    },
+ 
+    beforeSend: function () {
+        $(".card-dark").LoadingOverlay("show", {
+          text: "Cargando..."});
+    },
+  });
+}
+
+function traer_insumo_enfermedad_detalle(id){
+  $.ajax({
+    url: "/enfermedad/traer_insumo_enfermedad_detalle",
+    type: "POST", 
+    data: {id: id}, 
+    success: function (resp) {
+
+      $('#tbody_tabla_insumo').empty();
+
+      var llenat = ""; 
+      resp.forEach((row) => { 
+      llenat += `<tr>
+                  <td> ${row[0]} - ${row[1]}  </td>
+                  <td> ${row[2]} </td>  
+                </tr>`;           
+        $("#tbody_tabla_insumo").html(llenat);           
+      }); 
+
+      traer_insumo_medicamento_detalle(id);
+    },
+ 
+  });
+}
+
+function traer_insumo_medicamento_detalle(id){
+  $.ajax({
+    url: "/enfermedad/traer_insumo_medicamento_detalle",
+    type: "POST", 
+    data: {id: id}, 
+    success: function (resp) {
+
+      $('#tbody_tabla_medicamento').empty();
+
+      var llenat = ""; 
+      resp.forEach((row) => { 
+      llenat += `<tr>
+                  <td> ${row[0]} - ${row[1]}  </td>
+                  <td> ${row[2]} </td>  
+                </tr>`;           
+        $("#tbody_tabla_medicamento").html(llenat);           
+      }); 
+
+      traer_insumo_tratamiento_detalle(id);
+    },
+ 
+  });
+}
+
+function traer_insumo_tratamiento_detalle(id){
+  $.ajax({
+    url: "/enfermedad/traer_insumo_tratamiento_detalle",
+    type: "POST", 
+    data: {id: id}, 
+    success: function (resp) {
+
+      $('#tbody_tabla_tratamiento').empty();
+      $(".card-dark").LoadingOverlay("hide");
+
+      let count = 0; 
+      var llenat = ""; 
+      resp.forEach((row) => { 
+      count++;   
+      llenat += `<tr>
+                  <td> ${count}</td> 
+                  <td> ${row[0]}</td> 
+                </tr>`;           
+        $("#tbody_tabla_tratamiento").html(llenat);           
+      }); 
+
+      $("#moodal_detalle").modal({ backdrop: "static", keyboard: false });
+      $("#moodal_detalle").modal("show");
+    },
+ 
+  });
+}

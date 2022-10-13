@@ -2115,7 +2115,6 @@ $("#cerdo_aliemntacion").on("change", function(){
    type: "POST", 
    data: {id: id}, 
    success: function (resp) {
-     console.log(resp);
      $('#tbala_seguimento_alimento').DataTable().destroy();
      $(".select_cerdo_alimento").LoadingOverlay("hide");
      if(resp != 0){
@@ -2145,3 +2144,57 @@ $("#cerdo_aliemntacion").on("change", function(){
  });
 
 })
+
+function eliminar_peso_cerdo(id){
+  Swal.fire({
+    title: "Eliminar peso del cerdo?",
+    text: "El peso del cerdo se borrará del sistema!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Si, eliminar!",
+  }).then((result) => {
+    if (result.isConfirmed) {
+
+      $.ajax({
+        type: "POST",
+        url: "/alimento/eliminar_peso",
+        data: { id: id},
+        success: function (response) {
+          if (response == 1) {
+
+            cargar_contenido('contenido_principal','/peso_cerdo');
+            $(".card-info").LoadingOverlay("hide");
+            return Swal.fire(
+              "Peso eliminado",
+              "El peso del cerdo se elimino",
+              "success"
+            );
+            
+          } else {
+
+            $(".card-info").LoadingOverlay("hide");
+            return Swal.fire(
+              "Error",
+              "No se pudo eliminar el peso, falla en la matrix",
+              "error"
+            );
+
+          }
+        },
+    
+        beforeSend: function () {
+          $(".card-info").LoadingOverlay("show", {
+            text: "Cargando...",
+          });
+        },
+      });
+      
+
+    }
+  });
+}
+
+
+ 
