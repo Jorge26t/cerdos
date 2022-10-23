@@ -11,8 +11,11 @@ pip install fpdf
 
 
 para el mysql del pythonanywhere subir la base de datos
-USE jorge69$Cerdo; SOURCE cerdos/DB/tesis_cerdo.sql;
+USE Amadangelica1$cerdos; SOURCE cerdos/DB/tesis_cerdo.sql;
 entornoo virtual
 virtualenv --python=python3.9 env 
 correr servidor
 source env/bin/activate
+
+
+DROP DATABASE Amadangelica1$cerdos;

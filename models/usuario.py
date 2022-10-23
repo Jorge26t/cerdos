@@ -23,18 +23,45 @@ class Usuario():
     def crear_rol(_rol):
         try:
             query = mysql.connection.cursor()
-            query.execute(
-                'SELECT * FROM rol WHERE binary rol = "{0}"'. format(_rol))
+            query.execute('SELECT * FROM rol WHERE binary rol = "{0}"'. format(_rol))
             data = query.fetchone()
             if not data:
-                query.execute(
-                    'INSERT INTO rol (rol) VALUES ("{0}")'.format(_rol))
+                query.execute('INSERT INTO rol (rol) VALUES ("{0}")'.format(_rol))
                 query.connection.commit()
+                id = query.lastrowid
                 query.close()
-                return 1  # se inserto correcto
+                return id # se inserto correcto
             else:
                 query.close()
                 return 2
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+
+    # modelo para registrar los permisos del rol
+    def Crear_permisos_rol(id, usuario, config, cerdo, galpon, cergal, compraventa, alicerdo, insumo, medicamento, alimentacion, alimcerdo, pesaje, enfertrata, cerdosenfer, tratamiento):
+        try:
+            query = mysql.connection.cursor()
+            query.execute('INSERT INTO permisos (rol_id,usuario,config,cerdo,galpon,cerdo_galpon,compra_venta,alimento_cerdos,insumos_cerdo,medicamento,alimentacion,alimentaion_cerdo,pesaje,enfermedades_tratamiento,cerdo_enfermo,tratamiento) VALUES ("{0}","{1}","{2}","{3}","{4}","{5}","{6}","{7}","{8}","{9}","{10}","{11}","{12}","{13}","{14}","{15}")'.format(id, usuario, config, cerdo, galpon, cergal, compraventa, alicerdo, insumo, medicamento, alimentacion, alimcerdo, pesaje, enfertrata, cerdosenfer, tratamiento))
+            query.connection.commit()
+            query.close()
+            return 1  # se inserto correcto
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+
+    # modelo para editar los permisos del rol
+    def Editar_permisos_rol(id_rol, id_permiso, usuario, config, cerdo, galpon, cergal, compraventa, alicerdo, insumo, medicamento, alimentacion, alimcerdo, pesaje, enfertrata, cerdosenfer, tratamiento):
+        try:
+            query = mysql.connection.cursor()
+            query.execute('UPDATE permisos SET usuario = "{0}" ,config = "{1}" ,cerdo = "{2}" ,galpon = "{3}" ,cerdo_galpon = "{4}" ,compra_venta = "{5}" ,alimento_cerdos = "{6}" ,insumos_cerdo = "{7}" ,medicamento = "{8}" ,alimentacion = "{9}" ,alimentaion_cerdo = "{10}" ,pesaje = "{11}" ,enfermedades_tratamiento = "{12}" ,cerdo_enfermo = "{13}" ,tratamiento = "{14}" WHERE rol_id = "{15}" AND id = "{16}"'.format(usuario, config, cerdo, galpon, cergal, compraventa, alicerdo, insumo, medicamento, alimentacion, alimcerdo, pesaje, enfertrata, cerdosenfer, tratamiento, id_rol, id_permiso))
+            query.connection.commit()
+            query.close()
+            return 1  # se inserto correcto
         except Exception as e:
             query.close()
             error = "Ocurrio un problema: " + str(e)
@@ -56,6 +83,20 @@ class Usuario():
                 dic["estado"] = datos[2]
                 new_lista.append(dic)
             return {"data": new_lista}
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+
+    # modelo para obtener los permisso del rol
+    def Obtener_permisos(id):
+        try:
+            query = mysql.connection.cursor()
+            query.execute('SELECT * FROM permisos WHERE rol_id = "{0}"'. format(id))
+            data = query.fetchone()
+            query.close()
+            return data
         except Exception as e:
             query.close()
             error = "Ocurrio un problema: " + str(e)

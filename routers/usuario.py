@@ -19,6 +19,30 @@ def crear_rol():
         dato = Usuario.crear_rol(_rol)
         return jsonify(dato)
 
+# controlador para registrar los permisos del rol
+@usuario.route('/crear_permisos_rol', methods=['POST'])
+def crear_permisos_rol():
+    if request.method == 'POST':
+        id = request.form['id']
+        usuario = request.form['usuario']
+        config = request.form['config']
+        cerdo = request.form['cerdo']
+        galpon = request.form['galpon']
+        cergal = request.form['cergal']
+        compraventa = request.form['compraventa']
+        alicerdo = request.form['alicerdo']
+        insumo = request.form['insumo']
+        medicamento = request.form['medicamento']
+        alimentacion = request.form['alimentacion']
+        alimcerdo = request.form['alimcerdo']
+        pesaje = request.form['pesaje']
+        enfertrata = request.form['enfertrata']
+        cerdosenfer = request.form['cerdosenfer']
+        tratamiento = request.form['tratamiento'] 
+    
+        dato = Usuario.Crear_permisos_rol(id, usuario, config, cerdo, galpon, cergal, compraventa, alicerdo, insumo, medicamento, alimentacion, alimcerdo, pesaje, enfertrata, cerdosenfer, tratamiento)
+        return str(dato)
+
 # controlador para listar el rol
 @usuario.route('/listar_rol', methods=['GET'])
 def listar_rol():
@@ -43,6 +67,39 @@ def editar_rol():
         _id = request.form['id']
         dato = Usuario.Editar_rol(_rol, _id)
         return jsonify(dato)
+
+# controlador para obtener los permisso del rol
+@usuario.route('/obtener_permisos', methods=['POST'])
+def obtener_permisos():
+    if request.method == 'POST':
+        id = request.form['id']
+        dato = Usuario.Obtener_permisos(id)
+        return jsonify(dato)
+
+# controlador para editar los permisos del rol
+@usuario.route('/editar_permisos_rol', methods=['POST'])
+def editar_permisos_rol():
+    if request.method == 'POST':
+        id_rol = request.form['id_rol']
+        id_permiso = request.form['id_permiso']
+        usuario = request.form['usuario']
+        config = request.form['config']
+        cerdo = request.form['cerdo']
+        galpon = request.form['galpon']
+        cergal = request.form['cergal']
+        compraventa = request.form['compraventa']
+        alicerdo = request.form['alicerdo']
+        insumo = request.form['insumo']
+        medicamento = request.form['medicamento']
+        alimentacion = request.form['alimentacion']
+        alimcerdo = request.form['alimcerdo']
+        pesaje = request.form['pesaje']
+        enfertrata = request.form['enfertrata']
+        cerdosenfer = request.form['cerdosenfer']
+        tratamiento = request.form['tratamiento'] 
+    
+        dato = Usuario.Editar_permisos_rol(id_rol, id_permiso, usuario, config, cerdo, galpon, cergal, compraventa, alicerdo, insumo, medicamento, alimentacion, alimcerdo, pesaje, enfertrata, cerdosenfer, tratamiento)
+        return str(dato)
 
 # controlador para crear un producto
 @usuario.route('/crear_user', methods=['POST'])

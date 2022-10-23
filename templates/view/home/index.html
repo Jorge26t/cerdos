@@ -31,6 +31,10 @@
   <!-- summernote -->
   <link rel="stylesheet" href="{{url_for('static', filename='Admin/plugins/summernote/summernote-bs4.min.css')}}" />
 
+    <!-- fullCalendar -->
+  <link rel="stylesheet" href="{{url_for('static', filename='plugins/FULLCALENDAR/bootstrap-clockpicker.min.css')}}">
+  <link rel="stylesheet" href="{{url_for('static', filename='plugins/FULLCALENDAR/fullcalendar.min.css')}}">
+
   <link rel="stylesheet" href="{{url_for('static', filename='plugins/DATATABLES/datatables.min.css')}}" />
   <link rel="stylesheet" href="{{url_for('static', filename='plugins/SELECT2/css/select2.min.css')}}" />
 
@@ -165,7 +169,7 @@
             <img width="100px" id="imagen_l_1" class="img-circle elevation-2" alt="User Image" />
           </div>
           <div class="info" style="color: white;">
-            <a href="/" class="d-block"><span style="font-size: 17px;" id="nombres_l_l"></span></a>
+            <a href="/Admin" class="d-block"><span style="font-size: 17px;" id="nombres_l_l"></span></a>
             <span class="bg bg-info" style="border-radius: 20px; margin: 1px; font-size: 12px;" id="rol_l"></span>
           </div>
         </div>
@@ -254,6 +258,12 @@
                   <a onclick="cargar_contenido('contenido_principal','/list_cerdo');" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Listado de cerdos</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a style="background: red; color: white;" onclick="cargar_contenido('contenido_principal','/cerdos_muertos');" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Cerdos Muertos</p>
                   </a>
                 </li>
               </ul>
@@ -538,6 +548,95 @@
               </ul>
             </li>
 
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fa fa-syringe"></i> 
+                <p>
+                  Vacunación y desparasitación
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a onclick="cargar_contenido('contenido_principal','/calendario_vacunas_despara');" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Calendario vacunas o desparasitación </p>
+                  </a>
+                </li> 
+                <li class="nav-item">
+                  <a onclick="cargar_contenido('contenido_principal','/tipo_enfermedad');" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Tipo de enfermedad </p>
+                  </a>
+                </li> 
+                <li class="nav-item">
+                  <a onclick="cargar_contenido('contenido_principal','/tipo_tratamientos');" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Tipo de tratamiento </p>
+                  </a>
+                </li> 
+
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-circle"></i>
+                    <p>
+                      Cerdos enfermos
+                      <i class="right fas fa-angle-left"></i>
+                    </p>
+                  </a>
+                  <ul class="nav nav-treeview">
+
+                    <li class="nav-item">
+                      <a onclick="cargar_contenido('contenido_principal','/registro_enfermos');" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Registro</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a onclick="cargar_contenido('contenido_principal','/cerdos_enfermos_espera');" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>En espera</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a onclick="cargar_contenido('contenido_principal','/cerdos_tratados');" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Tratados</p>
+                      </a>
+                    </li>
+             
+                  </ul>
+                </li>
+
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-circle"></i>
+                    <p>
+                      Tratamientos para cerdos enfermos
+                      <i class="right fas fa-angle-left"></i>
+                    </p>
+                  </a>
+                  <ul class="nav nav-treeview">
+
+                    <li class="nav-item">
+                      <a onclick="cargar_contenido('contenido_principal','/tratar_cerdos');" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Tratar cerdos</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a onclick="cargar_contenido('contenido_principal','/listado_tratamientos');" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Listado de tratamientos</p>
+                      </a>
+                    </li>
+ 
+             
+                  </ul>
+                </li>
+
+              </ul>
+            </li>
 
           </ul>
         </nav>
@@ -553,13 +652,13 @@
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1 class="m-0">Tablero</h1>
+              <h1 class="m-0"><b>Panel principal</b></h1>
             </div>
             <!-- /.col -->
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a href="#">Inicio</a></li>
-                <li class="breadcrumb-item active">Tablero</li>
+                <li class="breadcrumb-item active">Panel principal</li>
               </ol>
             </div>
             <!-- /.col -->
@@ -581,12 +680,11 @@
                 <div class="inner">
                   <h3>150</h3>
 
-                  <p>Compras</p>
+                  <p>Cerdos</p>
                 </div>
                 <div class="icon">
-                  <i class="ion ion-bag"></i>
+                  <i class="fab fa-github-alt"></i>
                 </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
               </div>
             </div>
             <!-- ./col -->
@@ -596,12 +694,12 @@
                 <div class="inner">
                   <h3>53<sup style="font-size: 20px">%</sup></h3>
 
-                  <p>Engorde</p>
+                  <p>Alimento de cerdos</p>
                 </div>
                 <div class="icon">
-                  <i class="ion ion-stats-bars"></i>
+                  <i class="fa fa-utensils"></i>
                 </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+       
               </div>
             </div>
             <!-- ./col -->
@@ -611,12 +709,12 @@
                 <div class="inner">
                   <h3>44</h3>
 
-                  <p>Clientes</p>
+                  <p>Galpones</p>
                 </div>
                 <div class="icon">
-                  <i class="ion ion-person-add"></i>
+                  <i class="fa fa-home"></i>
                 </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+    
               </div>
             </div>
             <!-- ./col -->
@@ -626,12 +724,11 @@
                 <div class="inner">
                   <h3>65</h3>
 
-                  <p>Crias</p>
+                  <p>Medicinas</p>
                 </div>
                 <div class="icon">
-                  <i class="ion ion-pie-graph"></i>
+                  <i class="fas fa-pills"></i>
                 </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
               </div>
             </div>
             <!-- ./col -->
@@ -666,17 +763,19 @@
   <script></script>
   <!-- Bootstrap 4 -->
   <script src="{{url_for('static', filename='Admin/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-  <!-- <script src="{{url_for('static', filename='Admin/plugins/sparklines/sparkline.js')}}"></script>
-  <script src="{{url_for('static', filename='Admin/plugins/jqvmap/jquery.vmap.min.js')}}"></script>
-  <script src="{{url_for('static', filename='Admin/plugins/jqvmap/maps/jquery.vmap.usa.js')}}"></script> -->
+
   <script src="{{url_for('static', filename='Admin/plugins/moment/moment.min.js')}}"></script>
   <script src="{{url_for('static', filename='Admin/plugins/daterangepicker/daterangepicker.js')}}"></script>
   <script
     src="{{url_for('static', filename='Admin/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
-  <!-- <script src="{{url_for('static', filename='Admin/plugins/summernote/summernote-bs4.min.js')}}"></script>
-  <script
-    src="{{url_for('static', filename='Admin/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script> -->
+
   <script src="{{url_for('static', filename='Admin/dist/js/adminlte.js')}}"></script>
+
+  <!-- fullCalendar --> 
+  <script src="{{url_for('static', filename='plugins/FULLCALENDAR/moment.min.js')}}"></script>
+  <script src="{{url_for('static', filename='plugins/FULLCALENDAR/fullcalendar.min.js')}}"></script>
+  <script src="{{url_for('static', filename='plugins/FULLCALENDAR/es.js')}}"></script>
+  <script src="{{url_for('static', filename='plugins/FULLCALENDAR/bootstrap-clockpicker.min.js')}}"></script>
 
   <!-- mis scripts   -->
   <script src="{{url_for('static', filename='plugins/js/sweetalert2/sweetalert2.all.min.js')}}"></script>

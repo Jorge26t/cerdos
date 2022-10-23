@@ -1,4 +1,3 @@
-from webbrowser import Galeon
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask import jsonify, session
 
@@ -8,6 +7,7 @@ from models.cerdo import Cerdo
 from models.galpon import Galpon 
 from models.compras import Compras 
 from models.enfermedad import Enfermedad 
+from models.vacunas import Vacunas 
 from models.web import Web  
 
 from utils.Complemento import Complement
@@ -440,3 +440,33 @@ def listado_tratamientos():
         'cerdo': cerdo
     }
     return render_template('view/enfer_trata/listado_tratamientos.html', data = data)
+
+#vista de cerdos muertos
+@index.route('/cerdos_muertos')
+def cerdos_muertos():      
+    fecha = datetime.now()
+    now = fecha.strftime("%Y-%m-%d")   
+    cerdo = Galpon.Select_cerdos() 
+    muertos = Cerdo.Cerdos_muertos()
+
+    data = {
+        'fecha': now, 
+        'cerdo': cerdo,
+        'muertos': muertos
+    }
+    return render_template('view/cerdo/cerdos_muertos.html', data = data)
+
+#vista de cerdos muertos
+@index.route('/calendario_vacunas_despara')
+def calendario_vacunas_despara():      
+    fecha = datetime.now()
+    now = fecha.strftime("%Y-%m-%d")   
+    cerdo = Galpon.Select_cerdos() 
+    eventos = Vacunas.Listar_calendario()
+
+    data = {
+        'fecha': now, 
+        'cerdo': cerdo,
+        'evento': eventos
+    }
+    return render_template('view/vacuna_despara/calendario_vacunas_despara.html', data = data)

@@ -134,3 +134,23 @@ def editar_cerdo_chancho():
 
         dato = Cerdo.Editar_cerdo_chancho(_codigo_cerdo, _nombre, _sexo_cerdo, _raza_id, _peso, _origen, _fecha, _detalle_c, _id)
         return str(dato)
+
+# controlador para registra el cerdo muerto
+@cerdo.route('/registrar_muerte_cerdo', methods=['POST'])
+def registrar_muerte_cerdo():
+    if request.method == 'POST':
+        _cerdo = request.form['cerdo']
+        _fecha= request.form['fecha']
+        _detalle = request.form['detalle']
+
+        dato = Cerdo.Registrar_muerte_cerdo(_cerdo, _fecha, _detalle)
+        return str(dato)
+
+# controlador para eliminar  el cerdo muerto
+@cerdo.route('/eliminar_cerdo_muerto', methods=['POST'])
+def eliminar_cerdo_muerto():
+    if request.method == 'POST':
+        _id = request.form['id'] 
+
+        dato = Cerdo.Eliminar_cerdo_muerto(_id)
+        return str(dato)

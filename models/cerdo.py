@@ -207,3 +207,71 @@ class Cerdo():
             error = "Ocurrio un problema: " + str(e)
             return error
         return 0
+
+    # modelo para crear una nueva raza
+    def Registrar_muerte_cerdo(_cerdo, _fecha, _detalle):
+        try:
+            query = mysql.connection.cursor()
+            query.execute('INSERT INTO muertes (id_cerdo,fecha,detalle) VALUES ("{0}","{1}","{2}")'.format(_cerdo,_fecha,_detalle))
+            query.connection.commit()
+
+            query.execute('UPDATE cerdo SET estado = 2 WHERE id_cerdo = {0}'.format(_cerdo))
+            query.connection.commit()
+
+            query.close()
+            return 1  # se inserto correcto
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+
+    # modelo para  listar a los cerdos muertos
+    def Cerdos_muertos():
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                        muertes.id,
+                        muertes.id_cerdo,
+                        cerdo.codigo,
+                        cerdo.sexo,
+                        raza.raza,
+                        cerdo.peso,
+                        muertes.fecha,
+                        muertes.detalle,
+                        muertes.estado 
+                    FROM
+                        cerdo
+                        INNER JOIN muertes ON cerdo.id_cerdo = muertes.id_cerdo
+                        INNER JOIN raza ON cerdo.raza = raza.id_raza""")
+            data = query.fetchall()
+            query.close()
+            return data 
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+    
+    # modelo para eliminar  el cerdo muerto
+    def Eliminar_cerdo_muerto(_id):
+        try:
+            query = mysql.connection.cursor()
+
+            query.execute("""UPDATE muertes
+                            INNER JOIN cerdo ON muertes.id_cerdo = cerdo.id_cerdo 
+                            SET cerdo.estado = 1 
+                            WHERE
+                            muertes.id = {0}""".format(_id))
+            query.connection.commit()
+
+            query.execute('DELETE FROM muertes WHERE id = {0}'.format(_id))
+            query.connection.commit()
+
+            query.close()
+            return 1  # se inserto correcto
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
