@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask import jsonify, session
 
+#----- MODULOS -------
 from models.alimento import Alimento
 from models.usuario import Usuario
 from models.cerdo import Cerdo
@@ -9,6 +10,7 @@ from models.compras import Compras
 from models.enfermedad import Enfermedad 
 from models.vacunas import Vacunas 
 from models.web import Web  
+#-------------------
 
 from utils.Complemento import Complement
 from datetime import datetime
@@ -44,9 +46,24 @@ def Admin():
     if 'id_usu' in session and 'id_rol' in session:
         ahora = datetime.now()
         now = Complement.current_date_format(ahora)
-        return render_template('view/home/index.html', now = now)
+        dasboard = Usuario.Traer_datos_dashboard()
+        data = {
+            'dasboard': dasboard
+        }
+        return render_template('view/home/index.html', now = now, data = data)
     else:
         return redirect(url_for('index.Login'))
+
+# controlador del inicio de sesión
+@index.route('/diez_cerdos_gordos', methods=['GET'])
+def diez_cerdos_gordos():
+    dato = Usuario.Diez_cerdos_gordos()
+    return jsonify(dato)
+
+#vista para recuperara password 
+@index.route('/recuperar')
+def recuperar():  
+    return render_template('Login/recuperar.html')
 
 #vista pagina web
 @index.route('/pag_web')
@@ -470,3 +487,37 @@ def calendario_vacunas_despara():
         'evento': eventos
     }
     return render_template('view/vacuna_despara/calendario_vacunas_despara.html', data = data)
+
+#vista informa de compras alimentos
+@index.route('/informa_compra_alimento')
+def informa_compra_alimento(): 
+    return render_template('view/informe/informa_compra_alimento.html')
+
+#vista informa de compras alimentos
+@index.route('/informa_compra_insumos')
+def informa_compra_insumos(): 
+    return render_template('view/informe/informa_compra_insumos.html')
+
+#vista informa de compras medcamentos
+@index.route('/informa_compra_medicamentos')
+def informa_compra_medicamentos(): 
+    return render_template('view/informe/informa_compra_medicamentos.html')
+    
+#vista informa de control de peso del cerdo
+@index.route('/informa_control_peso')
+def informa_control_peso(): 
+    cerdo = Galpon.Select_cerdos() 
+    return render_template('view/informe/informa_control_peso.html', cerdo = cerdo)
+
+#vista informa de control de peso del cerdo
+@index.route('/informa_cerdo')
+def informa_cerdo(): 
+    raza = Cerdo.Traer_razas_combo()
+    galpon = Galpon.Listar_galpon_combo()
+    data = {
+        'raza': raza,
+        'galpon': galpon
+    }
+    return render_template('view/informe/informa_cerdo.html', data = data)
+
+    

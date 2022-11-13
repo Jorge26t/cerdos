@@ -638,6 +638,71 @@
               </ul>
             </li>
 
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fa fa-file"></i>
+                <p>
+                  Informes
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-circle"></i>
+                    <p>
+                      Informe de compras
+                      <i class="right fas fa-angle-left"></i>
+                    </p>
+                  </a>
+                  <ul class="nav nav-treeview">
+
+                    <li class="nav-item">
+                      <a onclick="cargar_contenido('contenido_principal','/informa_compra_alimento');" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Alimentos</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a onclick="cargar_contenido('contenido_principal','/informa_compra_insumos');" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Insumos</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a onclick="cargar_contenido('contenido_principal','/informa_compra_medicamentos');" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Medicamentos</p>
+                      </a>
+                    </li>
+             
+                  </ul>
+                </li>
+
+                <li class="nav-item">
+                  <a onclick="cargar_contenido('contenido_principal','/tipo_alimentacion');" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Venta de cerdos</p>
+                  </a>
+                </li> 
+
+                <li class="nav-item">
+                  <a onclick="cargar_contenido('contenido_principal','/informa_control_peso');" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Informe de control de peso</p>
+                  </a>
+                </li>
+
+                <li class="nav-item">
+                  <a onclick="cargar_contenido('contenido_principal','/informa_cerdo');" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Informe de cerdos</p>
+                  </a>
+                </li>   
+
+              </ul>
+            </li>
+
           </ul>
         </nav>
 
@@ -648,6 +713,7 @@
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper" id="contenido_principal">
       <!-- Content Header (Page header) -->
+
       <div class="content-header">
         <div class="container-fluid">
           <div class="row mb-2">
@@ -667,6 +733,7 @@
         </div>
         <!-- /.container-fluid -->
       </div>
+      
       <!-- /.content-header -->
 
       <!-- Main content -->
@@ -674,11 +741,12 @@
         <div class="container-fluid">
           <!-- Small boxes (Stat box) -->
           <div class="row">
+
             <div class="col-lg-3 col-6">
               <!-- small box -->
               <div class="small-box bg-info">
                 <div class="inner">
-                  <h3>150</h3>
+                  <h3>{{data.dasboard[0]}}</h3>
 
                   <p>Cerdos</p>
                 </div>
@@ -687,12 +755,13 @@
                 </div>
               </div>
             </div>
+
             <!-- ./col -->
             <div class="col-lg-3 col-6">
               <!-- small box -->
               <div class="small-box bg-success">
                 <div class="inner">
-                  <h3>53<sup style="font-size: 20px">%</sup></h3>
+                   <h3>{{data.dasboard[1]}}</h3>
 
                   <p>Alimento de cerdos</p>
                 </div>
@@ -702,27 +771,29 @@
        
               </div>
             </div>
+
             <!-- ./col -->
             <div class="col-lg-3 col-6">
               <!-- small box -->
               <div class="small-box bg-warning">
                 <div class="inner">
-                  <h3>44</h3>
+                  <h3>{{data.dasboard[2]}}</h3>
 
-                  <p>Galpones</p>
+                  <p>Insumos</p>
                 </div>
                 <div class="icon">
-                  <i class="fa fa-home"></i>
+                  <i class="fa fa-flask"></i>
                 </div>
     
               </div>
             </div>
+
             <!-- ./col -->
             <div class="col-lg-3 col-6">
               <!-- small box -->
               <div class="small-box bg-danger">
                 <div class="inner">
-                  <h3>65</h3>
+                   <h3>{{data.dasboard[3]}}</h3>
 
                   <p>Medicinas</p>
                 </div>
@@ -731,11 +802,39 @@
                 </div>
               </div>
             </div>
+
             <!-- ./col -->
           </div>
           <!-- /.row -->
           <!-- Main row -->
-          <div class="row"></div>
+          <div class="row">
+
+              <div class="col-lg-12 col-6">
+                  <div class="card card-warning">
+                      <div class="card-header">
+                          <h3 class="card-title"><b>10 cerdos mas gordos</b></h3>
+                      </div>
+
+                      <div class="card-body">
+                          <div class="row">
+
+                              <div class="form-group col-lg-12 col-6">
+
+                                <div class="chart_c">
+                                  <canvas id="areaChart_c" style="height:0"></canvas>
+                              </div>
+
+                              </div>
+                              
+                           
+                          </div>
+                      </div>
+                      <!-- /.card-body -->
+ 
+                  </div>
+              </div>
+      
+          </div>
           <!-- /.row (main row) -->
         </div>
         <!-- /.container-fluid -->
@@ -763,12 +862,9 @@
   <script></script>
   <!-- Bootstrap 4 -->
   <script src="{{url_for('static', filename='Admin/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-
   <script src="{{url_for('static', filename='Admin/plugins/moment/moment.min.js')}}"></script>
   <script src="{{url_for('static', filename='Admin/plugins/daterangepicker/daterangepicker.js')}}"></script>
-  <script
-    src="{{url_for('static', filename='Admin/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
-
+  <script src="{{url_for('static', filename='Admin/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
   <script src="{{url_for('static', filename='Admin/dist/js/adminlte.js')}}"></script>
 
   <!-- fullCalendar --> 
@@ -781,10 +877,12 @@
   <script src="{{url_for('static', filename='plugins/js/sweetalert2/sweetalert2.all.min.js')}}"></script>
   <script src="{{url_for('static', filename='plugins/DATATABLES/datatables.min.js')}}"></script>
   <script src="{{url_for('static', filename='plugins/SELECT2/js/select2.min.js')}}"></script>
+  <script src="{{url_for('static', filename='plugins/Chart/chart.min.js')}}"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
   
+  <!-- script del js -->
   <script src="{{url_for('static', filename='js/system.js')}}"></script>
 </body>
 
@@ -952,7 +1050,7 @@
 
 <script>
   var pass_usus_l = false;
-
+  Diez_cerdos_gordos();
   datos_usuarios_logeo();
 
   function cargar_contenido(contenedor, contenido) {
@@ -1058,4 +1156,87 @@
     }
     return true;
   });
+
+
+  ////////////////////////
+  /////////////////// para los graficos
+  ////////////////////////////////
+  function Diez_cerdos_gordos() {
+
+    var tipo_grafico = "bar";
+    var nombre_grafico = "Barra";
+     
+    $.ajax({
+      url: "/diez_cerdos_gordos",
+      type: "GET",
+      data: { },
+    }).done(function (response) {
+      if (response != 0) {
+
+        var nombre_C = [];
+        var peso = [];
+        var colores = [];
+   
+        for (var i = 0; i < response.length; i++) {
+          nombre_C.push(response[i][0]);
+          peso.push(response[i][1]);
+          colores.push(colores_rgb());
+        }
+
+        mostrar_graficos_cerdos_gordos(nombre_C, peso, tipo_grafico, nombre_grafico, colores);
+      } else {
+        $("canvas#areaChart_c").remove();
+      }
+    });
+  }
+
+  function mostrar_graficos_cerdos_gordos(nombre_c, peso, tipo_grafico, nombre_grafico, colores) {
+
+    $("canvas#areaChart_c").remove();
+    $("div.chart_c").append(
+      '<canvas id="areaChart_c" width="100" height="30"></canvas>'
+    );
+
+    var ctx = document.getElementById("areaChart_c").getContext("2d");
+    var myChart = new Chart(ctx, {
+      type: tipo_grafico,
+      data: {
+        labels: nombre_c,
+        datasets: [
+          {
+            label: nombre_grafico,
+            data: peso,
+            backgroundColor: colores,
+            borderColor: colores,
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+          },
+        },
+      },
+    });
+
+  }
+
+  /// par los graficos
+  function colores_rgb() {
+    var coolor =
+      "(" +
+      generar_numero(255) +
+      "," +
+      generar_numero(255) +
+      "," +
+      generar_numero(255) +
+      ")";
+    return "rgb" + coolor;
+  }
+
+  function generar_numero(numero) {
+    return (Math.random() * numero).toFixed(0);
+  }
 </script>

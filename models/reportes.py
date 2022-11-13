@@ -9,7 +9,8 @@ class Reportes():
                             empresa.nombre, 
                             empresa.telefono, 
                             empresa.correo, 
-                            empresa.direccion
+                            empresa.direccion,
+                            empresa.foto
                         FROM
                             empresa""")
             data = query.fetchone()
@@ -341,6 +342,252 @@ class Reportes():
                             INNER JOIN enfermedad ON detalle_enfermedad_cerdo.enfermedad_id = enfermedad.id 
                         WHERE
                             detalle_enfermedad_cerdo.cerdo_enfermedad_id = '{0}'""".format(idd))
+            data = query.fetchall()
+            query.close() 
+            return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+
+    ######################### INFORME COMPA ALIMENTOS POR FECHAS
+
+    # modelo para listado las compras de alimentos por fecha
+    def Informe_compras_alimento(f_i, f_f):
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                    compra_alimento.fecha,
+                    compra_alimento.numero_compra,
+                    compra_alimento.iva,
+                    compra_alimento.subtotal,
+                    compra_alimento.impuesto,
+                    compra_alimento.total 
+                FROM
+                    compra_alimento 
+                WHERE
+                    compra_alimento.estado = 1 AND DATE(compra_alimento.fecha) BETWEEN '{0}' AND '{1}' """.format(f_i,f_f))
+            data = query.fetchall()
+            query.close() 
+            return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+
+    ######################### INFORME COMPA INSUMOS POR FECHAS
+
+    # modelo para listado las compras de insumos por fecha
+    def Informe_compras_insumo(f_i, f_f):
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                        compra_insumo.fecha,
+                        compra_insumo.numero_compra,
+                        compra_insumo.iva,
+                        compra_insumo.subtotal,
+                        compra_insumo.impuesto,
+                        compra_insumo.total 
+                    FROM
+                        compra_insumo 
+                    WHERE
+                        compra_insumo.estado = 1 
+                        AND DATE( compra_insumo.fecha ) BETWEEN '{0}' AND '{1}' """.format(f_i,f_f))
+            data = query.fetchall()
+            query.close() 
+            return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+
+    ######################### INFORME COMPA MEDICAMENTO POR FECHAS
+
+    # modelo para listado las compras de medicamentos por fecha
+    def Informe_compras_medicamentos(f_i, f_f):
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                        compra_medicamento.fecha,
+                        compra_medicamento.numero_compra,
+                        compra_medicamento.iva,
+                        compra_medicamento.subtotal,
+                        compra_medicamento.impuesto,
+                        compra_medicamento.total 
+                    FROM
+                        compra_medicamento 
+                    WHERE
+                        compra_medicamento.estado = 1 
+                        AND DATE( compra_medicamento.fecha ) BETWEEN '{0}' AND '{1}' """.format(f_i,f_f))
+            data = query.fetchall()
+            query.close() 
+            return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+
+    ######################### INFORME CONTROL DE PESO DEL CERDO POR FECHAS
+
+    # modelo para listar el cerdo
+    def Cerdos_reporte(id):
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                        cerdo.id_cerdo,
+                        CONCAT_WS( ' ', cerdo.codigo, '-', cerdo.sexo, '-', raza.raza ) AS cerdo,
+                        cerdo.peso,
+                        galpon.numero 
+                    FROM
+                        cerdo
+                        INNER JOIN raza ON cerdo.raza = raza.id_raza
+                        INNER JOIN galpon_cerdo ON cerdo.id_cerdo = galpon_cerdo.id_cerdo
+                        INNER JOIN galpon ON galpon_cerdo.id_galpon = galpon.id_galpon WHERE 
+                        cerdo.estado = 1 AND cerdo.id_cerdo = '{0}' """.format(id))
+            data = query.fetchone()
+            query.close() 
+            return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+
+    # modelo para listado los pesos del cerdo por fechas
+    def Informe_control_peso(f_i, f_f, id):
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                        peso_cerdo.fecha,
+                        peso_cerdo.metodo,
+                        peso_cerdo.estado,
+                        peso_cerdo.peso_a,
+                        peso_cerdo.peso_b,
+                        peso_cerdo.p_v,
+                        cerdo.id_cerdo 
+                    FROM
+                        peso_cerdo
+                        INNER JOIN cerdo ON peso_cerdo.cerdo_id = cerdo.id_cerdo
+                        INNER JOIN raza ON cerdo.raza = raza.id_raza
+                            WHERE peso_cerdo.fecha BETWEEN '{0}' AND '{1}' AND cerdo.id_cerdo = '{2}' 
+                        ORDER BY
+                        peso_cerdo.fecha DESC, peso_cerdo.peso_id DESC""".format(f_i,f_f,id))
+            data = query.fetchall()
+            query.close() 
+            return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+
+    ######################### INFORME DE CERDOS
+
+    # modelo para listar los cerdo por razas
+    def Cerdos_por_raza(id):
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                        cerdo.codigo,
+                        cerdo.nombre,
+                        cerdo.sexo,
+                        raza.raza,
+                        cerdo.peso,
+                        galpon.numero 
+                        FROM
+                            raza
+                            INNER JOIN cerdo ON raza.id_raza = cerdo.raza
+                            INNER JOIN galpon_cerdo ON cerdo.id_cerdo = galpon_cerdo.id_cerdo
+                            INNER JOIN galpon ON galpon_cerdo.id_galpon = galpon.id_galpon 
+                        WHERE
+                        cerdo.estado = 1 
+                        AND cerdo.raza = '{0}' """.format(id))
+            data = query.fetchall()
+            query.close() 
+            return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+
+    # modelo para listar todos los cerdo
+    def Cerdos_full():
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                        cerdo.codigo,
+                        cerdo.nombre,
+                        cerdo.sexo,
+                        raza.raza,
+                        cerdo.peso,
+                        galpon.numero 
+                        FROM
+                            raza
+                            INNER JOIN cerdo ON raza.id_raza = cerdo.raza
+                            INNER JOIN galpon_cerdo ON cerdo.id_cerdo = galpon_cerdo.id_cerdo
+                            INNER JOIN galpon ON galpon_cerdo.id_galpon = galpon.id_galpon 
+                        WHERE
+                        cerdo.estado = 1""")
+            data = query.fetchall()
+            query.close() 
+            return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+
+    ######################### INFORME DE CERDOS POR GALPON
+
+    #modelo para traer el galpon del cerdo
+    def Listar_galpon_cerdo(id):
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                        galpon.id_galpon,
+                        galpon.numero,
+                        galpon.capacidad,
+                        galpon.id_tipo,
+                        tipo_galpon.tipo_galpon 
+                    FROM
+                        galpon
+                        INNER JOIN tipo_galpon ON galpon.id_tipo = tipo_galpon.id_tipo 
+                    WHERE
+                        galpon.id_galpon = '{0}'""". format(id))
+            data = query.fetchone()
+            query.close()
+            return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+      
+
+    # modelo para listar los cerdo por galpon
+    def Cerdos_por_galpon(id):
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                        cerdo.codigo,
+                        cerdo.nombre,
+                        cerdo.sexo,
+                        raza.raza,
+                        cerdo.peso,
+                        galpon.numero 
+                        FROM
+                            raza
+                            INNER JOIN cerdo ON raza.id_raza = cerdo.raza
+                            INNER JOIN galpon_cerdo ON cerdo.id_cerdo = galpon_cerdo.id_cerdo
+                            INNER JOIN galpon ON galpon_cerdo.id_galpon = galpon.id_galpon 
+                        WHERE
+                        cerdo.estado = 1 
+                        AND galpon.id_galpon = '{0}' """.format(id))
             data = query.fetchall()
             query.close() 
             return data

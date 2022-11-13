@@ -9,10 +9,10 @@ app.secret_key = 'my_secret_key'
 
 # creo la conexion a la base de datos
 # para instalar el modulo de MYSQL el comando es : pip instsall flask-mysqldb
-app.config['MYSQL_HOST'] = 'jorge69.mysql.pythonanywhere-services.com'
-app.config['MYSQL_USER'] = 'jorge69'
+app.config['MYSQL_HOST'] = 'Amadangelica1.mysql.pythonanywhere-services.com'
+app.config['MYSQL_USER'] = 'Amadangelica1'
 app.config['MYSQL_PASSWORD'] = 'Cerdo123C'
-app.config['MYSQL_DB'] = 'jorge69$Cerdo'
+app.config['MYSQL_DB'] = 'Amadangelica1$cerdos'
 # le paso la conexion al modulo
 MySQL(app)
 

@@ -19,6 +19,77 @@ class Usuario():
             return error
         return 0
 
+    # para verificar el correo del usuario
+    def Verificar_correo(correo):
+        try:
+            query = mysql.connection.cursor()
+            query.execute('SELECT * FROM usuario WHERE correo = "{0}"'. format(correo))
+            data = query.fetchone()
+            query.close()
+            if not data:
+                return 0
+            else:
+                return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+
+    # modelo para restablecer el password del usuario mediante su correo
+    def Restablecer_password(correo, password):
+        try:
+            query = mysql.connection.cursor()
+            query.execute('UPDATE usuario SET passwordd = "{0}" WHERE correo = "{1}"'.format(password, correo))
+            query.connection.commit()
+            query.close()
+            return 1  # se update correcto
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+
+    # para los datos del dashboard
+    def Traer_datos_dashboard():
+        try:
+            query = mysql.connection.cursor()
+            query.execute('CALL sp_dasboard()')
+            data = query.fetchone()
+            query.close()
+            return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+
+    # para los datos del dashboard
+    def Diez_cerdos_gordos():
+        try:
+            query = mysql.connection.cursor()
+            query.execute("""SELECT
+                        CONCAT_WS( ' ', cerdo.codigo, ' - ', raza.raza ) AS cerdo,
+                        cerdo.peso 
+                        FROM
+                            cerdo
+                            INNER JOIN raza ON cerdo.raza = raza.id_raza 
+                        WHERE
+                            cerdo.estado = 1 
+                        ORDER BY
+                        cerdo.peso DESC""")
+            data = query.fetchall()
+            query.close()
+            if not data:
+                return 0
+            else:
+                return data
+        except Exception as e:
+            query.close()
+            error = "Ocurrio un problema: " + str(e)
+            return error
+        return 0
+
     # modelo para crear un nuevo rol
     def crear_rol(_rol):
         try:
@@ -152,16 +223,28 @@ class Usuario():
         return 0
 
     # modelo para crear un nuevo usuario
-    def Craer_usuario(_nombres, _apellidos, _domicilio, _telefono, _tipo_rol, _usuario, _password, archivo):
+    def Craer_usuario(_nombres, _apellidos, _domicilio, _telefono, _tipo_rol, _usuario, _password, archivo, _correo):
         try:
             query = mysql.connection.cursor()
+
             query.execute('SELECT * FROM usuario WHERE usuario = "{0}"'. format(_usuario))
             data = query.fetchone()
             if not data:
-                query.execute('INSERT INTO usuario (nombres, apellidos, usuario, passwordd, rol_id, domicilio, telefono, foto) VALUES ("{0}","{1}","{2}","{3}","{4}","{5}","{6}","{7}")'.format(_nombres, _apellidos, _usuario, _password, _tipo_rol, _domicilio, _telefono, archivo))
-                query.connection.commit()
-                query.close()
-                return 1  # se inserto correcto
+
+                query.execute('SELECT * FROM usuario WHERE correo = "{0}"'. format(_correo))
+                datac = query.fetchone()
+                if not datac:
+
+                    query.execute('INSERT INTO usuario (nombres, apellidos, usuario, passwordd, rol_id, domicilio, telefono, foto, correo) VALUES ("{0}","{1}","{2}","{3}","{4}","{5}","{6}","{7}","{8}")'.format(_nombres, _apellidos, _usuario, _password, _tipo_rol, _domicilio, _telefono, archivo, _correo))
+                    query.connection.commit()
+                    query.close()
+                    return 1  # se inserto correcto
+
+                else:
+
+                    query.close()
+                    return 3 # correo ya existe
+
             else:
                 query.close()
                 return 2 # usuario ya existe
@@ -186,7 +269,8 @@ class Usuario():
                         usuario.telefono,
                         usuario.foto,
                         usuario.estado,
-                        rol.rol 
+                        rol.rol,
+                        usuario.correo
                         FROM
                         usuario
                         INNER JOIN rol ON usuario.rol_id = rol.rol_id""")
@@ -206,6 +290,7 @@ class Usuario():
                 dic["foto"] = datos[8]
                 dic["estado"] = datos[9]
                 dic["rol"] = datos[10]
+                dic["correo"] = datos[11]
                 new_lista.append(dic)
             return {"data": new_lista}
         except Exception as e:
@@ -229,16 +314,27 @@ class Usuario():
         return 0
 
     # modelo para editar el usuario
-    def Editar_usuario(_id, _nombres, _apellidos, _domicilio, _telefono, _tipo_rol, _usuario):
+    def Editar_usuario(_id, _nombres, _apellidos, _domicilio, _telefono, _tipo_rol, _usuario, _correo):
         try:
             query = mysql.connection.cursor()
+
             query.execute('SELECT * FROM usuario WHERE usuario = "{0}" AND usuario_id != "{1}"'. format(_usuario, _id))
             data = query.fetchone()
             if not data:
-                query.execute('UPDATE usuario SET nombres = "{0}", apellidos = "{1}", usuario = "{2}", rol_id = "{3}", domicilio = "{4}", telefono = "{5}" WHERE usuario_id = "{6}"'.format(_nombres, _apellidos, _usuario, _tipo_rol, _domicilio, _telefono, _id))
-                query.connection.commit()
-                query.close()
-                return 1  # se inserto correcto
+
+                query.execute('SELECT * FROM usuario WHERE correo = "{0}" AND usuario_id != "{1}"'. format(_correo, _id))
+                datac = query.fetchone()
+                if not datac:
+
+                    query.execute('UPDATE usuario SET nombres = "{0}", apellidos = "{1}", usuario = "{2}", rol_id = "{3}", domicilio = "{4}", telefono = "{5}", correo = "{6}" WHERE usuario_id = "{7}"'.format(_nombres, _apellidos, _usuario, _tipo_rol, _domicilio, _telefono, _correo, _id))
+                    query.connection.commit()
+                    query.close()
+                    return 1  # se inserto correcto
+                
+                else:
+                    query.close()
+                    return 3 # correo ya existe
+
             else:
                 query.close()
                 return 2 # usuario ya existe

@@ -1,5 +1,71 @@
 var tabla_rol, tabla_usuarios;
 
+$(document).on("click", "#btn_recuperar", function () {
+  window.location.href = "recuperar";
+});
+
+$(document).on("click", "#enviar_correo", function (event) {
+  event.preventDefault();
+  var correo = $("#correo_recuperar").val();
+
+  $(".login-box").LoadingOverlay("show", {
+    text: "Cargando...",
+  });
+
+  $.ajax({
+    type: "POST",
+    url: "/usuario/verificar_correo",
+    data: { correo: correo },
+    success: function (response) {
+      $("#none_recuperar").hide();
+      $("#error_envio_correo").hide();
+      $("#error_restablecer").hide();
+      $("#ok_password").hide();
+
+      if (response == 0) {
+
+        $(".login-box").LoadingOverlay("hide");
+        $("#none_recuperar").show(2000);
+
+      } else {
+        $.ajax({
+          type: "POST",
+          url: "https://amada.i-sistener.xyz/recuperar_password.php",
+          data: { password: response, correo: correo },
+          success: function (resp) {
+            // console.log(resp);
+            $("#error_envio_correo").hide(2000);
+            if (resp == 1) {
+              $.ajax({
+                type: "POST",
+                url: "/usuario/restablecer_password",
+                data: { password: response, correo: correo },
+                success: function (ok) {
+
+                  if (ok == 1) {
+                    $(".login-box").LoadingOverlay("hide");
+                    $("#ok_password").show(2000);
+                    $("#correo_recuperar").val("");
+                  } else {
+                    $(".login-box").LoadingOverlay("hide");
+                    $("#error_restablecer").show(2000);
+                  }
+                },
+
+              });
+            } else {
+
+              $(".login-box").LoadingOverlay("hide");
+              $("#error_envio_correo").show(2000);
+
+            }
+          },
+        });
+      }
+    },
+  });
+});
+
 $(document).on("click", "#btn_aceptar", function () {
   var usuario = $("#username").val();
   var password = $("#password").val();
@@ -97,9 +163,7 @@ function registra_rol() {
     data: { rol: rol },
     success: function (response) {
       if (response > 0) {
-
         registra_permisis_rol(parseInt(response));
-
       } else if (response == 2) {
         $(".card-body").LoadingOverlay("hide");
         return Swal.fire(
@@ -161,7 +225,7 @@ function registra_permisis_rol(id) {
       pesaje: pesaje,
       enfertrata: enfertrata,
       cerdosenfer: cerdosenfer,
-      tratamiento: tratamiento
+      tratamiento: tratamiento,
     },
   }).done(function (response) {
     if (response > 0) {
@@ -175,12 +239,12 @@ function registra_permisis_rol(id) {
         );
       }
     } else {
-     $(".card-body").LoadingOverlay("hide");
-        return Swal.fire(
-          "Error de registro",
-          "Error al crear los permisos del rol, falla en la matrix",
-          "error"
-        );
+      $(".card-body").LoadingOverlay("hide");
+      return Swal.fire(
+        "Error de registro",
+        "Error al crear los permisos del rol, falla en la matrix",
+        "error"
+      );
     }
   });
 }
@@ -467,9 +531,8 @@ function obtener_permisos(id) {
   $.ajax({
     url: "/usuario/obtener_permisos",
     type: "POST",
-    data: {  id: id },
+    data: { id: id },
   }).done(function (data) {
-
     $("#id_rol_p").val(id);
     $("#id_permiso").val(data[0]);
 
@@ -533,7 +596,7 @@ function obtener_permisos(id) {
       ? ($("#tratamiento_p")[0].checked = true)
       : ($("#tratamiento_p")[0].checked = false);
 
-      $(".card-info").LoadingOverlay("hide");
+    $(".card-info").LoadingOverlay("hide");
 
     $("#modal_editar_permisos").modal({
       backdrop: "static",
@@ -583,10 +646,9 @@ function editar_permisos() {
       pesaje: pesaje,
       enfertrata: enfertrata,
       cerdosenfer: cerdosenfer,
-      tratamiento: tratamiento
+      tratamiento: tratamiento,
     },
   }).done(function (response) {
-
     $(".bg-warning").LoadingOverlay("show", {
       text: "Cargando...",
     });
@@ -600,15 +662,14 @@ function editar_permisos() {
           "Los permisos del rol se editaron con exito",
           "success"
         );
-
       }
     } else {
-     $(".bg-warning").LoadingOverlay("hide");
-        return Swal.fire(
-          "Error",
-          "Error al editar los permisos del rol, falla en la matrix",
-          "error"
-        );
+      $(".bg-warning").LoadingOverlay("hide");
+      return Swal.fire(
+        "Error",
+        "Error al editar los permisos del rol, falla en la matrix",
+        "error"
+      );
     }
   });
 }
@@ -623,6 +684,7 @@ function registra_uuario() {
   var usuario = $("#usuario").val();
   var password = $("#password").val();
   var password_c = $("#password_c").val();
+  var correo = $("#correo").val();
 
   if (
     nombres.length == 0 ||
@@ -640,7 +702,9 @@ function registra_uuario() {
     password.length == 0 ||
     password.trim() == "" ||
     password_c.length == 0 ||
-    password_c.trim() == ""
+    password_c.trim() == "" ||
+    correo.length == 0 ||
+    correo.trim() == ""
   ) {
     validar_registros_usuario(
       nombres,
@@ -650,7 +714,8 @@ function registra_uuario() {
       tipo_rol,
       usuario,
       password,
-      password_c
+      password_c,
+      correo
     );
 
     return swal.fire(
@@ -667,6 +732,7 @@ function registra_uuario() {
     $("#usuario_obligg").html("");
     $("#password_obligg").html("");
     $("#password_c_obligg").html("");
+    $("#correo_obligg").html("");
   }
 
   if (password != password_c) {
@@ -702,6 +768,7 @@ function registra_uuario() {
   formdata.append("tipo_rol", tipo_rol);
   formdata.append("usuario", usuario);
   formdata.append("password", password);
+  formdata.append("correo", correo);
   formdata.append("foto", foto);
 
   $.ajax({
@@ -726,6 +793,13 @@ function registra_uuario() {
           return Swal.fire(
             "Usuario ya existe",
             "El usuario " + usuario + ", ya existe en el sistema",
+            "warning"
+          );
+        } else if (resp == 3) {
+          $(".card-body").LoadingOverlay("hide");
+          return Swal.fire(
+            "Correo ya existe",
+            "El correo " + correo + ", ya existe en el sistema",
             "warning"
           );
         }
@@ -755,7 +829,8 @@ function validar_registros_usuario(
   tipo_rol,
   usuario,
   password,
-  password_c
+  password_c,
+  correo
 ) {
   if (nombres.length == 0 || nombres.trim() == "") {
     $("#nombre_oblig").html("Ingrese los nombres");
@@ -803,6 +878,12 @@ function validar_registros_usuario(
     $("#password_c_obligg").html("Confirme el password");
   } else {
     $("#password_c_obligg").html("");
+  }
+
+  if (correo.length == 0 || correo.trim() == "") {
+    $("#correo_obligg").html("Confirme el correo");
+  } else {
+    $("#correo_obligg").html("");
   }
 }
 
@@ -858,6 +939,7 @@ function lista_usuarios() {
       { data: "domicilio" },
       { data: "telefono" },
       { data: "passwordd" },
+      { data: "correo" },
       {
         data: "estado",
         render: function (data, type, row) {
@@ -1034,13 +1116,15 @@ $("#tabla_usuario_").on("click", ".editar", function () {
   $("#domicilio").val(data.domicilio);
   $("#telefono").val(data.telefono);
   $("#usuario").val(data.usuario);
+  $("#correo").val(data.correo);
 
   $("#nombre_oblig").html("");
   $("#apellidos_obligg").html("");
   $("#domicilio_obligg").html("");
   $("#telefono_obligg").html("");
   $("#rol_obligg").html("");
-  $("#usuario_obligg").html(""); 
+  $("#usuario_obligg").html("");
+  $("#correo_obligg").html("");
 
   $("#modaleditar_usuario").modal({ backdrop: "static", keyboard: false });
   $("#modaleditar_usuario").modal("show");
@@ -1055,6 +1139,7 @@ function editar_usuario() {
   var telefono = $("#telefono").val();
   var tipo_rol = $("#rol_id").val();
   var usuario = $("#usuario").val();
+  var correo = $("#correo").val();
 
   if (
     nombres.length == 0 ||
@@ -1068,7 +1153,9 @@ function editar_usuario() {
     tipo_rol.length == 0 ||
     tipo_rol == 0 ||
     usuario.length == 0 ||
-    usuario.trim() == "" 
+    usuario.trim() == "" ||
+    correo.length == 0 ||
+    correo.trim() == ""
   ) {
     validar_registros_usuario_editar(
       nombres,
@@ -1076,7 +1163,8 @@ function editar_usuario() {
       domicilio,
       telefono,
       tipo_rol,
-      usuario 
+      usuario,
+      correo
     );
 
     return swal.fire(
@@ -1090,10 +1178,11 @@ function editar_usuario() {
     $("#domicilio_obligg").html("");
     $("#telefono_obligg").html("");
     $("#rol_obligg").html("");
-    $("#usuario_obligg").html(""); 
+    $("#usuario_obligg").html("");
+    $("#correo_obligg").html("");
   }
 
-  var formdata = new FormData(); 
+  var formdata = new FormData();
   formdata.append("id", id);
   formdata.append("nombres", nombres);
   formdata.append("apellidos", apellidos);
@@ -1101,6 +1190,7 @@ function editar_usuario() {
   formdata.append("telefono", telefono);
   formdata.append("tipo_rol", tipo_rol);
   formdata.append("usuario", usuario);
+  formdata.append("correo", correo);
 
   $.ajax({
     url: "/usuario/editar_usurio",
@@ -1112,7 +1202,6 @@ function editar_usuario() {
     success: function (resp) {
       if (resp > 0) {
         if (resp == 1) {
-
           $(".modal-body").LoadingOverlay("hide");
           $("#modaleditar_usuario").modal("hide");
           tabla_usuarios.ajax.reload();
@@ -1121,37 +1210,36 @@ function editar_usuario() {
             "El usuario se edito con exito",
             "success"
           );
-          
         } else if (resp == 2) {
-
           $(".modal-body").LoadingOverlay("hide");
           return Swal.fire(
             "Usuario ya existe",
             "El usuario " + usuario + ", ya existe en el sistema",
             "warning"
           );
+        } else if (resp == 3) {
+          $(".modal-body").LoadingOverlay("hide");
+          return Swal.fire(
+            "Correo ya existe",
+            "El correo " + correo + ", ya existe en el sistema",
+            "warning"
+          );
         }
-
       } else {
-
         $(".modal-body").LoadingOverlay("hide");
         return Swal.fire(
           "Error",
           "No se pudo editar el usuario, falla en la matrix",
           "error"
         );
-
       }
     },
 
     beforeSend: function () {
-
       $(".modal-body").LoadingOverlay("show", {
         text: "Cargando...",
       });
-
     },
-
   });
   return false;
 }
@@ -1162,7 +1250,8 @@ function validar_registros_usuario_editar(
   domicilio,
   telefono,
   tipo_rol,
-  usuario
+  usuario,
+  correo
 ) {
   if (nombres.length == 0 || nombres.trim() == "") {
     $("#nombre_oblig").html("Ingrese los nombres");
@@ -1198,6 +1287,12 @@ function validar_registros_usuario_editar(
     $("#usuario_obligg").html("Ingrese el usuario");
   } else {
     $("#usuario_obligg").html("");
+  }
+
+  if (correo.length == 0 || correo.trim() == "") {
+    $("#correo_obligg").html("Ingrese el correo");
+  } else {
+    $("#correo_obligg").html("");
   }
 }
 
@@ -1241,7 +1336,7 @@ function editar_foto_usuario() {
 
   formdata.append("id", id);
   formdata.append("foto", foto);
-  formdata.append("ruta_actual", ruta_actual); 
+  formdata.append("ruta_actual", ruta_actual);
 
   $.ajax({
     url: "/usuario/cambiar_foto_usuario",
@@ -1253,10 +1348,9 @@ function editar_foto_usuario() {
     success: function (resp) {
       if (resp > 0) {
         if (resp == 1) {
-
           $(".modal-body").LoadingOverlay("hide");
           document.getElementById("foto_new").value = "";
-          tabla_usuarios.ajax.reload();          
+          tabla_usuarios.ajax.reload();
           $("#modal_editar_foto").modal("hide");
           return Swal.fire(
             "Foto cambiada",
@@ -1264,27 +1358,20 @@ function editar_foto_usuario() {
             "success"
           );
         }
-
       } else {
-
         $(".modal-body").LoadingOverlay("hide");
         return Swal.fire(
           "Error",
           "Error al cambiar la foto del usuario",
           "error"
         );
-        
       }
     },
     beforeSend: function () {
-
       $(".modal-body").LoadingOverlay("show", {
         text: "Cargando...",
       });
-
     },
-
-
   });
   return false;
 }
@@ -1298,7 +1385,7 @@ function editar_empresa() {
   var direccion = $("#direccion").val();
   var correo = $("#correo").val();
   var encargado = $("#encargado").val();
-  var descripcion = $("#descripcion").val(); 
+  var descripcion = $("#descripcion").val();
 
   if (
     nombres.length == 0 ||
@@ -1332,13 +1419,13 @@ function editar_empresa() {
       "warning"
     );
   } else {
-      $("#nombre_oblig").html("");
-      $("#ruc_obligg").html(""); 
-      $("#telefono_obligg").html("");
-      $("#direccion_obligg").html("");
-      $("#correo_obligg").html(""); 
-      $("#encargado_obligg").html("");
-      $("#descricions_obligg").html("");
+    $("#nombre_oblig").html("");
+    $("#ruc_obligg").html("");
+    $("#telefono_obligg").html("");
+    $("#direccion_obligg").html("");
+    $("#correo_obligg").html("");
+    $("#encargado_obligg").html("");
+    $("#descricions_obligg").html("");
   }
 
   if (!correo_usus) {
@@ -1368,25 +1455,22 @@ function editar_empresa() {
     success: function (resp) {
       if (resp > 0) {
         if (resp == 1) {
-
           $(".card-body").LoadingOverlay("hide");
-          cargar_contenido('contenido_principal','/hacienda');
+          cargar_contenido("contenido_principal", "/hacienda");
 
           return Swal.fire(
             "Datos editados",
             "Se edito los datos correctamente",
             "success"
           );
-        } 
+        }
       } else {
-
         $(".card-body").LoadingOverlay("hide");
         return Swal.fire(
           "Error",
           "No se pudo editar los datos, falla en la matrix",
           "error"
         );
-
       }
     },
     beforeSend: function () {
@@ -1448,7 +1532,6 @@ function validar_editar_empresa(
   } else {
     $("#descricions_obligg").html("");
   }
-
 }
 
 function editar_foto_emppresa() {
@@ -1467,7 +1550,7 @@ function editar_foto_emppresa() {
   var foto = $("#foto")[0].files[0];
 
   formdata.append("foto", foto);
-  formdata.append("ruta_actual", ruta_actual); 
+  formdata.append("ruta_actual", ruta_actual);
 
   $.ajax({
     url: "/usuario/cambiar_foto_empresa",
@@ -1479,36 +1562,28 @@ function editar_foto_emppresa() {
     success: function (resp) {
       if (resp > 0) {
         if (resp == 1) {
-
           $("card-body").LoadingOverlay("hide");
-          cargar_contenido('contenido_principal','/hacienda');          
+          cargar_contenido("contenido_principal", "/hacienda");
           return Swal.fire(
             "Foto cambiada",
             "La foto del usuario se cambio con exito",
             "success"
           );
         }
-
       } else {
-
         $("card-body").LoadingOverlay("hide");
         return Swal.fire(
           "Error",
           "Error al cambiar la foto de la hacienda",
           "error"
         );
-        
       }
     },
     beforeSend: function () {
-
       $("card-body").LoadingOverlay("show", {
         text: "Cargando...",
       });
-
     },
-
-
   });
   return false;
 }

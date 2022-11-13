@@ -3,6 +3,7 @@ from os import getcwd, path, remove
 from flask import jsonify, session
 from models.usuario import Usuario
 import time
+import random
 
 # es un enrutador
 # ojo cuando agas una redirecion usa index.luego la funcion
@@ -10,6 +11,38 @@ usuario = Blueprint('usuario', __name__)
 # para mover la imagen
 PATH_FILE = getcwd() + "/static/uploads/usuario/"
 PATH_EMPRESA = getcwd() + "/static/uploads/empresa/"
+
+# controlador para verificar el correo del usuario
+@usuario.route('/verificar_correo', methods=['POST'])
+def verificar_correo():
+    if request.method == 'POST':
+        correo = request.form['correo']
+        dato = Usuario.Verificar_correo(correo)
+        if dato == 0:
+            return jsonify(dato)
+        else:
+            minus = "abcdefghijklmnopqrstuvwxyz"
+            mayus = minus.upper()
+            numeros = "0123456789"
+            simbolos = "@-&+.=/"
+
+            base = minus+mayus+numeros+simbolos
+            longitud = 12
+
+            for _ in range(10):
+                muestra = random.sample(base, longitud)
+                password = "".join(muestra)
+
+            return jsonify(password)
+
+# controlador para restablecer el password del usuario mediante su correo
+@usuario.route('/restablecer_password', methods=['POST'])
+def restablecer_password():
+    if request.method == 'POST':
+        correo = request.form['correo']
+        password = request.form['password']
+        dato = Usuario.Restablecer_password(correo, password)
+        return jsonify(dato)
 
 # controlador para crear un nuevo rol
 @usuario.route('/crear_rol', methods=['POST'])
@@ -112,13 +145,14 @@ def crear_user():
         _tipo_rol = request.form['tipo_rol']
         _usuario = request.form['usuario']
         _password = request.form['password']
+        _correo = request.form['correo']
         _foto = request.files.get("foto", False)
 
         if _foto:
             # usuario con foto
             hora_ac = time.strftime('%Y%m%d%H%M%S_', time.localtime())
             archivo = hora_ac + _foto.filename             
-            dato = Usuario.Craer_usuario(_nombres, _apellidos, _domicilio, _telefono, _tipo_rol, _usuario, _password, archivo)
+            dato = Usuario.Craer_usuario(_nombres, _apellidos, _domicilio, _telefono, _tipo_rol, _usuario, _password, archivo, _correo)
             if dato == 1:
                 _foto.save(PATH_FILE + archivo)
                 return str(dato)
@@ -128,7 +162,7 @@ def crear_user():
         else:
             # usuario sin foto
             archivo = "user.png"
-            dato = Usuario.Craer_usuario(_nombres, _apellidos, _domicilio, _telefono, _tipo_rol, _usuario, _password, archivo)
+            dato = Usuario.Craer_usuario(_nombres, _apellidos, _domicilio, _telefono, _tipo_rol, _usuario, _password, archivo, _correo)
             return str(dato)
 
 # controlador para listar los usuarios
@@ -158,8 +192,9 @@ def editar_usurio():
         _telefono = request.form['telefono']
         _tipo_rol = request.form['tipo_rol']
         _usuario = request.form['usuario'] 
+        _correo = request.form['correo'] 
          
-        dato = Usuario.Editar_usuario(_id, _nombres, _apellidos, _domicilio, _telefono, _tipo_rol, _usuario)
+        dato = Usuario.Editar_usuario(_id, _nombres, _apellidos, _domicilio, _telefono, _tipo_rol, _usuario, _correo)
         return str(dato)
    
 # para editar la foto del usuario

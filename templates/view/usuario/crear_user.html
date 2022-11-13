@@ -53,10 +53,10 @@
                   <span style="color: red" id="telefono_obligg"></span>
                 </div>
 
-                <div class="form-group col-lg-6 col-6">
+                <div class="form-group col-lg-3 col-6">
                   <label for="rol_id">Rol de usuario</label>
-                  <select class="form-control" style="width: 100%" id="rol_id">
-                    <option value="0">--- Seleccione rol de usuario ---</option>
+                  <select class="form-control rol_id" style="width: 100%" id="rol_id">
+                    <option value="0">--- Seleccione el rol ---</option>
 
                     {% for datas in data %}
                     <option value="{{datas[0]}}">{{datas[1]}}</option>
@@ -65,10 +65,17 @@
                   <span style="color: red" id="rol_obligg"></span>
                 </div>
 
-                <div class="form-group col-lg-6 col-6">
+                <div class="form-group col-lg-4 col-6">
                   <label for="usuario">Usuario</label>
                   <input type="text" maxlength="35" class="form-control" id="usuario" placeholder="Ingrese usuario" />
                   <span style="color: red" id="usuario_obligg"></span>
+                </div>
+
+                <div class="form-group col-lg-5 col-6">
+                  <label for="correo">Correo</label>
+                  <input type="text" maxlength="60" class="form-control" id="correo"
+                    placeholder="Ingrese correo" />
+                  <span style="color: red" id="correo_obligg"></span>
                 </div>
 
                 <div class="form-group col-lg-6 col-6">
@@ -126,6 +133,8 @@
 <script src="static/js/usuario.js"></script>
 
 <script>
+  $(".rol_id").select2();
+
   var pass_usus = false;
 
   function ver_password() {
@@ -207,4 +216,29 @@
       return (document.getElementById("foto").value = "");
     }
   }
+
+  $("#correo").keyup(function() {
+    if (this.value != "") {
+        document.getElementById('correo').addEventListener('input', function() {
+            campo = event.target;
+            //este codigo me da formato email
+            email = /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
+
+            //esto es para validar si es un email valida
+            if (email.test(campo.value)) {
+                //estilos para cambiar de color y ocultar el boton
+                $(this).css("border", "1px solid green");
+                $("#correo_obligg").html("");
+                // $("#ocutar_p").show();
+            } else {
+                $(this).css("border", "1px solid red");
+                $("#correo_obligg").html("Email incorrecto");
+                // $("#ocutar_p").hide();
+            }
+        });
+    } else {
+        $(this).css("border", "1px solid green");
+        $("#correo_obligg").html("");
+    }
+  });
 </script>
